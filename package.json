@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "description": "A simple personal Digital Asset Management(DAM) tool.",
   "main": "server.js",
+  "nodemonConfig": {
+    "ignore": ["./view", "README.md"]
+  },
   "scripts": {
-    "server": "nodemon server.js --ignore ./view",
+    "start": "nodemon server.js",
     "lint:check": "eslint ."
   },
   "author": "Chiyuan Fu",
