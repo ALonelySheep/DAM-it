@@ -38,7 +38,7 @@ CREATE TABLE installation(
     appId           SERIAL          REFERENCES app(id) ,
     ifUninstalled   BOOLEAN         DEFAULT false,
     date            DATE            ,
-    category        varchar(20)     
+    category        varchar(20) 	DEFAULT 'Not Specified'     
 );
 
 CREATE TABLE renewal(
@@ -47,7 +47,7 @@ CREATE TABLE renewal(
     startDate       DATE            ,
     numberOfRenewal INTEGER         DEFAULT 0,
     reminder        BOOLEAN         DEFAULT false,
-    category        varchar(20)     
+    category        varchar(20) 	DEFAULT 'Not Specified'     
 );
 
 CREATE TABLE purchase(
@@ -55,7 +55,7 @@ CREATE TABLE purchase(
     paiedContentId  SERIAL          REFERENCES paiedContent(id) ,
     date            DATE            ,
     timeLimit       INTERVAL        DEFAULT NULL, --NULL represents forever
-    category        varchar(20)
+    category        varchar(20) 	DEFAULT 'Not Specified'
 );
 
 CREATE TABLE device(
@@ -72,7 +72,7 @@ CREATE TABLE work(
     deviceId        SERIAL          REFERENCES device(id) ,
     title           VARCHAR(80)     NOT NULL,
     copyright       VARCHAR(40)     DEFAULT 'Not Specified',
-    category        VARCHAR(20)     
+    category        varchar(20) 	DEFAULT 'Not Specified'     
 );
 
 
