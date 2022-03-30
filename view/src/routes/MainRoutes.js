@@ -1,9 +1,13 @@
+import AuthGate from 'views/pages/authentication/AuthGate';
+import config from 'config';
+
 import { lazy } from 'react';
 
+import { useRoutes } from 'react-router-dom';
 // project imports
 import MainLayout from 'layout/MainLayout';
 import Loadable from 'ui-component/Loadable';
-// import MinimalLayout from 'layout/MinimalLayout';
+
 
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
@@ -18,19 +22,20 @@ const UtilsTablerIcons = Loadable(lazy(() => import('views/utilities/TablerIcons
 // sample page routing
 const SamplePage = Loadable(lazy(() => import('views/sample-page')));
 
+// const NotFound = Loadable(lazy(() => import('views/NotFound')));
+
+
 // ==============================|| MAIN ROUTING ||============================== //
 
-const MainRoutes = {
+
+
+const MainRoutesComponents =
+{
     path: '/',
     element: <MainLayout />,
-    // element: <MinimalLayout />,
     children: [
         {
-            path: '/',
-            element: <DashboardDefault />
-        },
-        {
-            path: '/dashboard/default',
+            path: '/dashboard',
             element: <DashboardDefault />
         },
         {
@@ -58,6 +63,25 @@ const MainRoutes = {
             element: <SamplePage />
         }
     ]
-};
+}
 
-export default MainRoutes;
+const AuthedMainRoutesComponents =
+{
+    path: '/',
+    element: <AuthGate />,
+    children: [
+        MainRoutesComponents,
+        // TODO 加上path: '*', 会出现疯狂报错的问题
+        {
+            // path: '*',
+            // element: <h2>sdsd</h2>
+            // element: <NotFound />
+        }
+    ]
+}
+
+export default function MainRoutes() {
+    return useRoutes([AuthedMainRoutesComponents], config.basename);
+}
+
+

@@ -4,13 +4,17 @@ import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, StyledEngineProvider } from '@mui/material';
 
 // routing
-import Routes from 'routes';
+// 这里是从routes文件夹里面的index.js里面引入的
+import MainRoutes from 'routes/MainRoutes';
+import AuthenticationRoutes from 'routes/AuthenticationRoutes';
 
 // defaultTheme
+// 同理，这里是从themes/index.js里面引入的
 import themes from 'themes';
 
 // project imports
 import NavigationScroll from 'layout/NavigationScroll';
+import {AuthProvider} from 'AuthProvider';
 
 // ==============================|| APP ||============================== //
 
@@ -22,7 +26,10 @@ const App = () => {
             <ThemeProvider theme={themes(customization)}>
                 <CssBaseline />
                 <NavigationScroll>
-                    <Routes />
+                    <AuthProvider>
+                        <AuthenticationRoutes />
+                        <MainRoutes />
+                    </AuthProvider>
                 </NavigationScroll>
             </ThemeProvider>
         </StyledEngineProvider>

@@ -1,29 +1,30 @@
 import { useState, useRef, useEffect } from 'react';
 
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
+import { useAuth } from 'AuthProvider'
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import {
     Avatar,
     Box,
-    Card,
-    CardContent,
+    // Card,
+    // CardContent,
     Chip,
     ClickAwayListener,
     Divider,
-    Grid,
-    InputAdornment,
+    // Grid,
+    // InputAdornment,
     List,
     ListItemButton,
     ListItemIcon,
     ListItemText,
-    OutlinedInput,
+    // OutlinedInput,
     Paper,
     Popper,
     Stack,
-    Switch,
+    // Switch,
     Typography
 } from '@mui/material';
 
@@ -33,31 +34,35 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import Transitions from 'ui-component/extended/Transitions';
-import UpgradePlanCard from './UpgradePlanCard';
+// import UpgradePlanCard from './UpgradePlanCard';
 import User1 from 'assets/images/users/user-round.svg';
 
 // assets
-import { IconLogout, IconSearch, IconSettings, IconUser } from '@tabler/icons';
+import {
+    IconLogout,
+    IconSettings,
+    // IconSearch,
+    // IconUser
+} from '@tabler/icons';
 
 // ==============================|| PROFILE MENU ||============================== //
 
 const ProfileSection = () => {
     const theme = useTheme();
     const customization = useSelector((state) => state.customization);
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
-    const [sdm, setSdm] = useState(true);
-    const [value, setValue] = useState('');
-    const [notification, setNotification] = useState(false);
-    const [selectedIndex, setSelectedIndex] = useState(-1);
+    // const [sdm, setSdm] = useState(true);
+    // const [value, setValue] = useState('');
+    // const [notification, setNotification] = useState(false);
+    const [selectedIndex,
+        // setSelectedInde
+    ] = useState(-1);
     const [open, setOpen] = useState(false);
     /**
      * anchorRef is used on different componets and specifying one type leads to other components throwing an error
      * */
     const anchorRef = useRef(null);
-    const handleLogout = async () => {
-        console.log('Logout');
-    };
 
     const handleClose = (event) => {
         if (anchorRef.current && anchorRef.current.contains(event.target)) {
@@ -66,14 +71,14 @@ const ProfileSection = () => {
         setOpen(false);
     };
 
-    const handleListItemClick = (event, index, route = '') => {
-        setSelectedIndex(index);
-        handleClose(event);
+    // const handleListItemClick = (event, index, route = '') => {
+    //     setSelectedIndex(index);
+    //     handleClose(event);
 
-        if (route && route !== '') {
-            navigate(route);
-        }
-    };
+    //     if (route && route !== '') {
+    //         navigate(route);
+    //     }
+    // };
     const handleToggle = () => {
         setOpen((prevOpen) => !prevOpen);
     };
@@ -86,6 +91,36 @@ const ProfileSection = () => {
 
         prevOpen.current = open;
     }, [open]);
+
+    // Authentication
+    const auth = useAuth();
+    // console.log(auth.userInfo)
+    // console.log('authClient:', auth.authClient)
+
+    // Handle LogOut
+    const handleLogout = async () => {
+        // console.log('Logout');
+        auth.authClient.logout()
+        auth.setClient(null);
+        auth.setUser(null);
+    };
+
+
+
+    // Greeting
+    const myDate = new Date();
+    const hrs = myDate.getHours();
+    let greet = 'Good ';
+    if (hrs < 12)
+        greet += 'Morning, ';
+    else if (hrs >= 12 && hrs <= 17)
+        greet += 'Afternoon, ';
+    else if (hrs >= 17 && hrs <= 24)
+        greet += 'Evening, ';
+
+    // userLevel
+    const userLevel = auth.userInfo.isRoot ? 'Project Admin' : 'User';
+
 
     return (
         <>
@@ -157,14 +192,14 @@ const ProfileSection = () => {
                                     <Box sx={{ p: 2 }}>
                                         <Stack>
                                             <Stack direction="row" spacing={0.5} alignItems="center">
-                                                <Typography variant="h4">Good Morning,</Typography>
+                                                <Typography variant="h4">{greet}</Typography>
                                                 <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
-                                                    Johne Doe
+                                                    {auth.userInfo.email}
                                                 </Typography>
                                             </Stack>
-                                            <Typography variant="subtitle2">Project Admin</Typography>
+                                            <Typography variant="subtitle2">{userLevel}</Typography>
                                         </Stack>
-                                        <OutlinedInput
+                                        {/* <OutlinedInput
                                             sx={{ width: '100%', pr: 1, pl: 2, my: 2 }}
                                             id="input-search-profile"
                                             value={value}
@@ -179,14 +214,14 @@ const ProfileSection = () => {
                                             inputProps={{
                                                 'aria-label': 'weight'
                                             }}
-                                        />
-                                        <Divider />
+                                        /> */}
+                                        {/* <Divider /> */}
                                     </Box>
                                     <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>
                                         <Box sx={{ p: 2 }}>
-                                            <UpgradePlanCard />
-                                            <Divider />
-                                            <Card
+                                            {/* <UpgradePlanCard /> */}
+                                            {/* <Divider /> */}
+                                            {/* <Card
                                                 sx={{
                                                     bgcolor: theme.palette.primary.light,
                                                     my: 2
@@ -227,8 +262,10 @@ const ProfileSection = () => {
                                                         </Grid>
                                                     </Grid>
                                                 </CardContent>
-                                            </Card>
+                                            </Card> */}
+
                                             <Divider />
+
                                             <List
                                                 component="nav"
                                                 sx={{
@@ -245,7 +282,8 @@ const ProfileSection = () => {
                                                     }
                                                 }}
                                             >
-                                                <ListItemButton
+                                                {/* Account Settings */}
+                                                {/* <ListItemButton
                                                     sx={{ borderRadius: `${customization.borderRadius}px` }}
                                                     selected={selectedIndex === 0}
                                                     onClick={(event) => handleListItemClick(event, 0, '/user/account-profile/profile1')}
@@ -254,8 +292,10 @@ const ProfileSection = () => {
                                                         <IconSettings stroke={1.5} size="1.3rem" />
                                                     </ListItemIcon>
                                                     <ListItemText primary={<Typography variant="body2">Account Settings</Typography>} />
-                                                </ListItemButton>
-                                                <ListItemButton
+                                                </ListItemButton> */}
+
+                                                {/* Social Profile */}
+                                                {/* <ListItemButton
                                                     sx={{ borderRadius: `${customization.borderRadius}px` }}
                                                     selected={selectedIndex === 1}
                                                     onClick={(event) => handleListItemClick(event, 1, '/user/social-profile/posts')}
@@ -282,7 +322,7 @@ const ProfileSection = () => {
                                                             </Grid>
                                                         }
                                                     />
-                                                </ListItemButton>
+                                                </ListItemButton> */}
                                                 <ListItemButton
                                                     sx={{ borderRadius: `${customization.borderRadius}px` }}
                                                     selected={selectedIndex === 4}

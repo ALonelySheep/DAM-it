@@ -2,7 +2,10 @@
     "name": "dam-it-view",
     "version": "1.0.0",
     "private": true,
+    "homepage": "/login",
     "dependencies": {
+        "@authing/react-ui-components": "^3.0.31",
+        "authing-js-sdk": "^4.18.7",
         "@emotion/cache": "^11.4.0",
         "@emotion/react": "^11.4.0",
         "@emotion/styled": "^11.3.0",
