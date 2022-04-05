@@ -1,12 +1,13 @@
 // assets
-import { IconTypography, IconPalette, IconShadow, IconWindmill } from '@tabler/icons';
+import { IconTypography, IconPalette, IconShadow, IconWindmill, IconRss} from '@tabler/icons';
 
 // constant
 const icons = {
     IconTypography,
     IconPalette,
     IconShadow,
-    IconWindmill
+    IconWindmill,
+    IconRss
 };
 
 // ==============================|| UTILITIES MENU ITEMS ||============================== //
@@ -16,6 +17,14 @@ const utilities = {
     title: 'Utilities',
     type: 'group',
     children: [
+        {
+            id: 'subscriptions',
+            title: 'Subscriptions',
+            type: 'item',
+            url: '/subscriptions',
+            icon: icons.IconRss,
+            breadcrumbs: false
+        },
         {
             id: 'util-typography',
             title: 'Typography',
@@ -61,6 +70,14 @@ const utilities = {
                     breadcrumbs: false
                 }
             ]
+        },
+        {
+            id: 'util-test',
+            title: 'Form',
+            type: 'item',
+            url: '/simpleform',
+            icon: icons.IconShadow,
+            breadcrumbs: false
         }
     ]
 };
