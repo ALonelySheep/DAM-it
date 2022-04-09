@@ -117,6 +117,4 @@ const insertTestData = async () => {
     }
 };
 
-
-
 module.exports = { clearDB, initDB, resetDB, insertTestData };

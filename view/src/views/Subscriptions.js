@@ -1,307 +1,292 @@
 import PropTypes from 'prop-types';
-
+import { IconPlus } from '@tabler/icons';
 // material-ui
 import {
     Box,
     Card,
     Grid,
     Typography,
-    Button,
     CardActionArea,
-    CardActions,
-    useMediaQuery
+    Stack,
+    CircularProgress,
+    useTheme,
+    DialogContent,
+    Dialog
 } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+
+import { useState, useEffect, lazy } from 'react';
 
 // project imports
 import SubCard from 'ui-component/cards/SubCard';
 import MainCard from 'ui-component/cards/MainCard';
-// Secondary是右边的一个小图标链接, 暂时不需要
-// import SecondaryAction from 'ui-component/cards/CardSecondaryAction';
+import Loadable from 'ui-component/Loadable';
 import { gridSpacing } from 'store/constant';
 
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-
-import * as React from 'react';
-import TextField from '@mui/material/TextField';
-
-import { lazy } from 'react';
-import Loadable from 'ui-component/Loadable';
+import { getAllSubscriptions } from 'api/subscriptionAPI';
+import { getAllApps } from 'api/appAPI';
 
 const SubscriptionForm = Loadable(lazy(() => import('views/utilities/SubscriptionForm')));
 
-// ===============================|| COLOR BOX ||=============================== //
 
 
-const SubBox = ({ bgcolor, title, data, dark }) => {
-    const [open, setOpen] = React.useState(false);
-    // const [value, setValue] = React.useState('');
-    // const theme = useTheme();
-    // const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
-    const handleClickOpen = () => {
-        setOpen(true);
+// =============================|| COLOR BOX ||=============================== //
+// Accepts the array and key
+const groupBy = (array, key) => array.reduce((result, currentValue) => {
+    // If an array already present for key, push it to the array. Else create an array and push the object
+    (result[currentValue[key]] = result[currentValue[key]] || []).push(
+        currentValue
+    );
+    // Return the current iteration `result` value, this will be taken as next iteration `result` value and accumulate
+    return result;
+}, {}); // empty object is the initial value for result object
+
+const preprocessData = (apps, subs) => {
+    console.log('preprocessing...')
+    console.log(subs);
+    const subsGrouped = groupBy(subs, 'appid');
+    for (let i = 0; i < apps.length; i += 1) {
+        if (!subsGrouped[apps[i].id])
+            subsGrouped[apps[i].id] = [];
+    }
+    return subsGrouped;
+}
+
+// ==============================|| UI COLOR ||=============================== //
+
+const Subscriptions = () => {
+
+    let subscriptionsPerApp
+    let appList
+
+    const [isLoading, setLoading] = useState(true);
+    const [subscriptions, setSubscriptions] = useState([]);
+    const [apps, setApps] = useState([]);
+    const [isDialogClosed, setDialogClosed] = useState(false);
+
+    useEffect(async () => {
+        console.log('I\'m only supposed to show at first render!');
+
+        subscriptionsPerApp = await getAllSubscriptions()
+        appList = await getAllApps();
+        // console.log("Raw Data From Backend：");
+        // console.log(subscriptionsPerApp);
+        // console.log(appList);
+        subscriptionsPerApp = preprocessData(appList, subscriptionsPerApp)
+
+        console.log("Preprocessed data: ")
+        console.log(subscriptionsPerApp);
+        console.log(appList);
+
+        setSubscriptions(subscriptionsPerApp)
+        setApps(appList)
+
+        setLoading(false);
+    }, []);
+
+    // useEffect(() => {
+    //     console.log('I\'m supposed to show at every render!');
+    // });
+
+    useEffect(async () => {
+        console.log('I\'m supposed to show every time the dialog closes!');
+        if (!isLoading) {
+            subscriptionsPerApp = await getAllSubscriptions()
+            appList = await getAllApps()
+
+            subscriptionsPerApp = preprocessData(appList, subscriptionsPerApp)
+
+            console.log("Preprocessed data: ")
+            console.log(subscriptionsPerApp);
+            console.log(appList);
+
+            setSubscriptions(subscriptionsPerApp)
+            setApps(appList)
+        }
+    }, [isDialogClosed]);
+
+
+    const SubBox = ({ subscription }) => {
+        const { name, price, monetaryUnit, billingCycle, billingCycleUnit } = subscription;
+        const [open, setOpen] = useState(false);
+        const priceString = price === 0 ? 'Free' : `${price} ${monetaryUnit}`;
+        const billingCycleString = `${billingCycle} ${billingCycleUnit.charAt(0).toUpperCase() + billingCycleUnit.slice(1)} `;
+
+        // TODO Change color based on billing cycle and application
+        const darkColorText = false;
+
+        const handleClickOpen = () => {
+            setOpen(true);
+        };
+
+        const handleClose = () => {
+            setDialogClosed(!isDialogClosed);
+            setOpen(false);
+        };
+
+        return (
+            <>
+                <Dialog
+                    // Dialog 调整大小的方式是允许fullwidth再设置maxwidth的大小
+                    fullWidth
+                    // fullScreen={fullScreen}
+                    maxWidth='sm'
+                    open={open}
+                    onClose={handleClose}>
+                    <DialogContent>
+                        <SubscriptionForm title={name} setOpen={setOpen} setDialogClosed={setDialogClosed} isDialogClosed={isDialogClosed} isEdit subscription={subscription} />
+                    </DialogContent>
+                </Dialog>
+
+                <Card sx={{ mb: 3 }}>
+                    <CardActionArea onClick={() => {
+                        handleClickOpen();
+                    }}>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                py: 4.5,
+                                bgcolor: "primary.main",
+                                // 这个是根据背景色改变字体颜色的, 防止字看不清
+                                color: darkColorText ? 'grey.800' : '#ffffff'
+                            }}
+                        >
+                            {name && (
+                                <Typography variant="subtitle1" color="inherit">
+                                    {name}
+                                </Typography>
+                            )}
+                            {!name && <Box sx={{ p: 1.15 }} />}
+                        </Box>
+                    </CardActionArea>
+                </Card>
+                {
+                    (priceString || billingCycleString) && (
+                        <Grid container justifyContent="space-between" alignItems="center">
+                            <Grid item>
+                                <Typography variant="subtitle1" sx={{ textTransform: 'uppercase' }}>
+                                    {priceString}
+                                </Typography>
+                            </Grid>
+                            <Grid item>
+                                <Typography variant="subtitle2">{billingCycleString}</Typography>
+                            </Grid>
+                        </Grid>
+                    )
+                }
+            </>
+        )
     };
+    // SubBox.propTypes = {
+    //     // bgcolor: PropTypes.string,
+    //     name: PropTypes.string,
+    //     data: PropTypes.object.isRequired,
+    // };
 
-    const handleCancle = () => {
-        setOpen(false);
-        console.log('cancle');
-    };
+    const NewSubscription = (props) => {
+        const { app } = props;
 
-    const handleSubmit = () => {
-        setOpen(false);
-        console.log('submit');
-        // console.log('submit: ', value);
-    };
+        const newSubTitle = `New Subscription for ${app.name}`;
+        const bgcolor = "grey.100"
+        const darkColorText = true
+        const [open, setOpen] = useState(false);
 
-    const handleClose = () => {
-        setOpen(false);
-        console.log('Closed');
-    };
+        // No Cancel button is displayed if use fullscreen
+        // const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-    return (
-        <>
-            <Dialog
-                // Dialog 调整大小的方式是允许fullwidth再设置maxwidth的大小
-                fullWidth
-                maxWidth='sm'
-                open={open}
-                onClose={handleClose}>
-                <DialogContent>
-                    <SubscriptionForm data={data} />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCancle}>Cancel</Button>
-                    <Button onClick={handleSubmit}>Subscribe</Button>
-                </DialogActions>
-            </Dialog>
+        const handleClickOpen = () => {
+            setOpen(true);
+        };
 
-            <Card sx={{ mb: 3 }}>
-                <CardActionArea onClick={() => {
-                    console.log("CardActionArea clicked: ", data.label);
-                    handleClickOpen();
-                }}>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            py: 4.5,
-                            bgcolor,
-                            color: dark ? 'grey.800' : '#ffffff'
-                        }}
-                    >
-                        {title && (
-                            <Typography variant="subtitle1" color="inherit">
-                                {title}
+        const handleClose = () => {
+            setOpen(false);
+            setDialogClosed(!isDialogClosed);
+            // console.log('Closed');
+        };
+
+        return (
+            <>
+                <Dialog
+                    fullWidth
+                    // fullScreen={fullScreen}
+                    maxWidth='sm'
+                    open={open}
+                    onClose={handleClose}>
+                    <DialogContent>
+                        <SubscriptionForm title={newSubTitle} setOpen={setOpen} setDialogClosed={setDialogClosed} isDialogClosed={isDialogClosed} isEdit={false} />
+                    </DialogContent>
+                </Dialog>
+
+                <Card sx={{ mb: 3 }}>
+                    <CardActionArea onClick={() => {
+                        handleClickOpen();
+                    }}>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                py: 4.5,
+                                bgcolor,
+                                // 这个是根据背景色改变字体颜色的, 防止字看不清
+                                color: darkColorText ? 'grey.800' : '#ffffff',
+                                paddingBottom: '28px'
+                            }}
+                        ><Typography variant="subtitle1" color="inherit">
+                                <IconPlus />
                             </Typography>
-                        )}
-                        {!title && <Box sx={{ p: 1.15 }} />}
-                    </Box>
-                </CardActionArea>
-            </Card>
-            {
-                data && (
-                    <Grid container justifyContent="space-between" alignItems="center">
-                        <Grid item>
-                            <Typography variant="subtitle2">{data.label}</Typography>
-                        </Grid>
-                        <Grid item>
-                            <Typography variant="subtitle1" sx={{ textTransform: 'uppercase' }}>
-                                {data.color}
-                            </Typography>
-                        </Grid>
-                    </Grid>
-                )
-            }
-        </>
-    )
-};
+                        </Box>
+                    </CardActionArea>
+                </Card>
+            </>
+        )
+    };
 
-SubBox.propTypes = {
-    bgcolor: PropTypes.string,
-    title: PropTypes.string,
-    data: PropTypes.object.isRequired,
-    dark: PropTypes.bool
-};
-
-// ===============================|| UI COLOR ||=============================== //
-
-const Subscriptions = () => (
-    // <MainCard title="Color Palette" secondary={<SecondaryAction link="https://next.material-ui.com/system/palette/" />}> //那个Secondary是右边的一个小图标链接, 暂时不需要
-    <MainCard title="Subscriptions">
-        <Grid container spacing={gridSpacing}>
-            <Grid item xs={12}>
-                <SubCard title="App Name Here">
-                    <Grid container spacing={gridSpacing}>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            {/* 上面的xs等等都是Breakpoints, 意思是在不同的情况下,一个box占的屏幕比例是不一样的 比如在小屏幕时, 一个box会占满整个屏幕, 而在大屏幕的的时候, 一个box只占用屏幕的2/12=六分之一 */}
-                            <SubBox bgcolor="primary.light" data={{ label: 'Blue-50', color: '#E3F2FD' }} title="Subscription A" dark />
-                        </Grid>
-                        {/* <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <SubBox bgcolor="primary.200" data={{ label: 'Blue-200', color: '#90CAF9' }} title="primary[200]" dark />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <SubBox bgcolor="primary.main" data={{ label: 'Blue-500', color: '#2196F3' }} title="primary.main" />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <SubBox bgcolor="primary.dark" data={{ label: 'Blue-600', color: '#1E88E5' }} title="primary.dark" />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <SubBox bgcolor="primary.800" data={{ label: 'Blue-800', color: '#1565C0' }} title="primary[800]" />
-                        </Grid> */}
-                    </Grid>
-                </SubCard>
-            </Grid>
-            <Grid item xs={12}>
-                <SubCard title="Secondary Color">
-                    <Grid container spacing={gridSpacing}>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <SubBox
-                                bgcolor="secondary.light"
-                                data={{ label: 'DeepPurple-50', color: '#ede7f6' }}
-                                title="secondary.light"
-                                dark
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <SubBox
-                                bgcolor="secondary.200"
-                                data={{ label: 'DeepPurple-200', color: '#b39ddb' }}
-                                title="secondary[200]"
-                                dark
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <SubBox
-                                bgcolor="secondary.main"
-                                data={{ label: 'DeepPurple-500', color: '#673ab7' }}
-                                title="secondary.main"
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <SubBox
-                                bgcolor="secondary.dark"
-                                data={{ label: 'DeepPurple-600', color: '#5e35b1' }}
-                                title="secondary.dark"
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <SubBox bgcolor="secondary.800" data={{ label: 'DeepPurple-800', color: '#4527a0' }} title="secondary[800]" />
-                        </Grid>
-                    </Grid>
-                </SubCard>
-            </Grid>
-            <Grid item xs={12}>
-                <SubCard title="Success Color">
-                    <Grid container spacing={gridSpacing}>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <SubBox bgcolor="success.light" data={{ label: 'Green-A100', color: '#b9f6ca' }} title="success.light" dark />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <SubBox bgcolor="success.main" data={{ label: 'Green-A200', color: '#69f0ae' }} title="success[200]" />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <SubBox bgcolor="success.main" data={{ label: 'Green-A400', color: '#69f0ae' }} title="success.main" />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <SubBox bgcolor="success.dark" data={{ label: 'Green-A700', color: '#00c853' }} title="success.dark" />
-                        </Grid>
-                    </Grid>
-                </SubCard>
-            </Grid>
-            <Grid item xs={12}>
-                <SubCard title="Orange Color">
-                    <Grid container spacing={gridSpacing}>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <SubBox
-                                bgcolor="orange.light"
-                                data={{ label: 'DeepOrange-50', color: '#fbe9e7' }}
-                                title="orange.light"
-                                dark
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <SubBox bgcolor="orange.main" data={{ label: 'DeepOrange-200', color: '#ffab91' }} title="orange.main" />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <SubBox bgcolor="orange.dark" data={{ label: 'DeepOrange-800', color: '#d84315' }} title="orange.dark" />
-                        </Grid>
-                    </Grid>
-                </SubCard>
-            </Grid>
-            <Grid item xs={12}>
-                <SubCard title="Error Color">
-                    <Grid container spacing={gridSpacing}>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <SubBox bgcolor="error.light" data={{ label: 'Red-50', color: '#ef9a9a' }} title="error.light" dark />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <SubBox bgcolor="error.main" data={{ label: 'Red-200', color: '#f44336' }} title="error.main" />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <SubBox bgcolor="error.dark" data={{ label: 'Red-800', color: '#c62828' }} title="error.dark" />
-                        </Grid>
-                    </Grid>
-                </SubCard>
-            </Grid>
-            <Grid item xs={12}>
-                <SubCard title="Warning Color">
-                    <Grid container spacing={gridSpacing}>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <SubBox bgcolor="warning.light" data={{ label: 'Amber-50', color: '#b9f6ca' }} title="warning.light" dark />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <SubBox bgcolor="warning.main" data={{ label: 'Amber-100', color: '#ffe57f' }} title="warning.main" dark />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <SubBox bgcolor="warning.dark" data={{ label: 'Amber-500', color: '#FFC107' }} title="warning.dark" />
-                        </Grid>
-                    </Grid>
-                </SubCard>
-            </Grid>
-            <Grid item xs={12}>
-                <SubCard title="Grey Color">
-                    <Grid container spacing={gridSpacing}>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <SubBox bgcolor="grey.50" data={{ label: 'Grey-50', color: '#fafafa' }} title="grey[50]" dark />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <SubBox bgcolor="grey.100" data={{ label: 'Grey-100', color: '#f5f5f5' }} title="grey[100]" dark />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <SubBox bgcolor="grey.200" data={{ label: 'Grey-200', color: '#eeeeee' }} title="grey[200]" dark />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <SubBox bgcolor="grey.300" data={{ label: 'Grey-300', color: '#e0e0e0' }} title="grey[300]" dark />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <SubBox bgcolor="grey.500" data={{ label: 'Grey-500', color: '#9e9e9e' }} title="grey[500]" />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <SubBox bgcolor="grey.700" data={{ label: 'Grey-600', color: '#757575' }} title="grey[600]" />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <SubBox bgcolor="grey.700" data={{ label: 'Grey-700', color: '#616161' }} title="grey[700]" />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <SubBox bgcolor="grey.900" data={{ label: 'Grey-900', color: '#212121' }} title="grey[900]" />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={2}>
-                            <SubBox bgcolor="#fff" data={{ label: 'Pure White', color: '#ffffff' }} title="Pure White" dark />
-                        </Grid>
-                    </Grid>
-                </SubCard>
-            </Grid>
+    const makeGridForSub = (subscription) => (
+        <Grid key={subscription.id} item xs={12} sm={6} md={4} lg={3}>
+            {/* 上面的xs等等都是Breakpoints, 意思是在不同的情况下,一个box占的屏幕比例是不一样的 比如在小屏幕时, 一个box会占满整个屏幕, 而在大屏幕的的时候, 一个box只占用屏幕的2/12=六分之一 */}
+            <SubBox
+                // {...subscription}
+                subscription={subscription}
+                key={subscription.id}
+            />
         </Grid>
-    </MainCard>
-);
+    )
 
+    const makeGridForApp = (app, subscriptions) => (
+        <Grid key={app.id} item xs={12}>
+            <SubCard key={app.id} title={app.name}>
+                <Grid key={app.id} container spacing={gridSpacing}>
+                    {subscriptions.map(makeGridForSub)}
+                    <Grid key="New" item xs={12} sm={6} md={4} lg={3}>
+                        <NewSubscription app={app} />
+                    </Grid>
+                </Grid>
+            </SubCard>
+        </Grid>
+    )
+
+
+
+    return isLoading ? (
+        <MainCard >
+            <Stack alignItems="center">
+                <CircularProgress color="secondary" />
+            </Stack>
+        </MainCard>
+    ) : (
+        // <MainCard title="Color Palette" secondary={<SecondaryAction link="https://next.material-ui.com/system/palette/" />}> //那个Secondary是右边的一个小图标链接, 暂时不需要
+        <MainCard title="Subscriptions">
+            <Grid container spacing={gridSpacing}>
+                {
+                    // appList.map((app, i) => (makeGridForApp(app, subscriptionsPerApp[i])))
+                    apps.map((app) => (makeGridForApp(app, subscriptions[app.id])))
+                }
+            </Grid>
+        </MainCard>
+    );
+
+};
 
 export default Subscriptions;

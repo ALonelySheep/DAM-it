@@ -19,10 +19,12 @@ CREATE TABLE app(
 CREATE TABLE subscription(
     id              SERIAL          PRIMARY KEY,
     name            varchar(40)     NOT NULL,
-    appId           SERIAL          REFERENCES app(id) ,
+    appId           SERIAL          REFERENCES app(id)  ON DELETE CASCADE,
     price           MONEY           DEFAULT 0,
+    monetaryUnit    varchar(10)     DEFAULT 'CNY'       NOT NULL,
+    startDate       DATE            NOT NULL,
     cycle           INTERVAL        DEFAULT '1 month'   NOT NULL,
-    monetaryUnit    varchar(10)     DEFAULT 'CNY'       NOT NULL
+    autoRenewal     BOOLEAN         DEFAULT true        NOT NULL
 );
 
 CREATE TABLE paiedContent(

@@ -1,8 +1,12 @@
 const express = require('express');
+const cors = require('cors');
+
 require('dotenv').config();
 // const expenseRoutes = require('./routes/expense');
 
-const testRouter = require('./route/testRouter');
+const testRouter = require('./router/testRouter');
+const subscriptionRouter = require('./router/subscriptionRouter');
+const appRouter = require('./router/appRouter');
 
 // Running express server
 const app = express();
@@ -12,7 +16,9 @@ const port = process.env.PORT || 8000;
 // app.use('/api', expenseRoutes);
 
 const bodyParser = require('body-parser')
-
+app.use(cors({
+  origin: 'http://localhost:3000',
+}));
 app.use(bodyParser.json())
 app.use(
   bodyParser.urlencoded({
@@ -20,12 +26,10 @@ app.use(
   })
 )
 
-app.use('/',testRouter);
+app.use('/test',testRouter);
+app.use('/subscription',subscriptionRouter);
+app.use('/app',appRouter);
 
-
-app.get('/', (req, res, next) => {
-    res.json({info:'Hello from Express   !!!!!!!!!!'})
-});
 
 app.listen(port, () => {
   // eslint-disable-next-line no-console

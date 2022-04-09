@@ -69,7 +69,8 @@ export default function themeTypography(theme) {
             marginTop: 1,
             marginBottom: 1,
             '& > label': {
-                top: 23,
+                // top: 23,
+                top: 16,
                 left: 0,
                 color: theme.grey500,
                 '&[data-shrink="false"]': {
@@ -77,7 +78,8 @@ export default function themeTypography(theme) {
                 }
             },
             '& > div > input': {
-                padding: '30.5px 14px 11.5px !important'
+                padding: '24.5px 14px 11.5px !important'
+                // padding: '30.5px 14px 11.5px !important'
             },
             '& legend': {
                 display: 'none'

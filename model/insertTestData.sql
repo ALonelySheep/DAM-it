@@ -125,47 +125,47 @@ INSERT INTO userAccount
 
 INSERT INTO app (name,	price, monetaryUnit)
 VALUES
-  ('Arcu Incorporated',				92.45,		'CNY'),
-  ('Mus Associates',				47.37,		'EUR'),
-  ('Libero Corporation',			15.40,		'CNY'),
-  ('Dolor Nonummy',					24.47,		'EUR'),
-  ('Non Vestibulum LLC',			28.38,		'CNY'),
-  ('Sociis PC',						55.98,		'USD'),
-  ('Vulputate',						55.96,		'EUR'),
-  ('Scelerisque LLC',				85.37,		'CNY'),
-  ('Gravida Inc.',					71.34,		'CNY'),
-  ('Eu PC',							95.71,		'USD');
+  ('APP-Arcu Incorporated',				92.45,		'CNY'),
+  ('APP-Mus Associates',				47.37,		'EUR'),
+  ('APP-Libero Corporation',			15.40,		'CNY'),
+  ('APP-Dolor Nonummy',					24.47,		'EUR'),
+  ('APP-Non Vestibulum LLC',			28.38,		'CNY'),
+  ('APP-Sociis PC',						55.98,		'USD'),
+  ('APP-Vulputate',						55.96,		'EUR'),
+  ('APP-Scelerisque LLC',				85.37,		'CNY'),
+  ('APP-Gravida Inc.',					71.34,		'CNY'),
+  ('APP-Eu PC',							95.71,		'USD');
 INSERT INTO app (name,	price, monetaryUnit)
 VALUES
-  ('Sem Eget Massa Industries',		86.86,		'CNY'),
-  ('Turpis LLP',					91.16,		'USD'),
-  ('Placerat Limited',				46.65,		'CNY'),
-  ('Ridiculus Industries',			35.08,		'EUR'),
-  ('Posuere Consulting',			83.17,		'CNY'),
-  ('Eget PC',						16.43,		'CNY'),
-  ('Urna Vivamus LLC',				8.43,		'CNY'),
-  ('Elit Industries',				12.19,		'CNY'),
-  ('Eget Institute',				24.01,		'USD'),
-  ('Porttitor Institute',			58.10,		'USD');
+  ('APP-Sem Eget Massa Industries',		86.86,		'CNY'),
+  ('APP-Turpis LLP',					91.16,		'USD'),
+  ('APP-Placerat Limited',				46.65,		'CNY'),
+  ('APP-Ridiculus Industries',			35.08,		'EUR'),
+  ('APP-Posuere Consulting',			83.17,		'CNY'),
+  ('APP-Eget PC',						16.43,		'CNY'),
+  ('APP-Urna Vivamus LLC',				8.43,		'CNY'),
+  ('APP-Elit Industries',				12.19,		'CNY'),
+  ('APP-Eget Institute',				24.01,		'USD'),
+  ('APP-Porttitor Institute',			58.10,		'USD');
 
 --! sub x 14 -----------------------------------------------
 
-INSERT INTO subscription (name,appId,price,cycle,monetaryUnit)
+INSERT INTO subscription (name,appId,price,cycle,monetaryUnit,startDate,autoRenewal)
 VALUES
-  ('Basic',		1,	10.00,		'1 month',		'EUR'),
-  ('Basic',		1,	12.00,		'1 year',		'EUR'),
-  ('Basic',		5,	5.20,		'12 month',		'CNY'),
-  ('Basic',		5,	1.10,		'12 month',		'CNY'),
-  ('Standard',	2,	2.45,		'4 month',		'CNY'),
-  ('Standard',	8,	1.20,		'2 month',		'CNY'),
-  ('Standard',	6,	1.20,		'1 month',		'EUR'),
-  ('Standard',	2,	2.45,		'6 month',		'CNY'),
-  ('Premium',	3,	50.0,		'6 month',		'USD'),
-  ('Premium',	4,	50.0,		'1 year',		'USD'),
-  ('Premium',	7,	1.340,		'12 month',		'CNY'),
-  ('Ultimate',	8,	3.20,		'12 month',		'CNY'),
-  ('Ultimate',	4,	34.00,		'1.5 month',	'CNY'),
-  ('Ultimate',	4,	34.10,		'4 month',		'CNY');
+  ('Basic',		1,	10.00,		'90 day',		'EUR', '2020-05-05',false ),
+  ('Basic',		1,	12.00,		'1 year',		'EUR', '2018-06-03',false ),
+  ('Basic',		5,	5.20,		'12 month',		'CNY', '2021-01-11',true ),
+  ('Basic',		5,	1.10,		'12 month',		'CNY', '2020-08-07',true ),
+  ('Standard',	2,	2.45,		'4 month',		'CNY', '2014-10-29',true ),
+  ('Standard',	8,	1.20,		'2 month',		'CNY', '2015-04-21',true ),
+  ('Standard',	6,	1.20,		'1 month',		'EUR', '2016-06-28',true ),
+  ('Standard',	2,	2.45,		'6 month',		'CNY', '2018-03-19',true ),
+  ('Premium',	3,	50.0,		'6 month',		'USD', '2017-02-02',false ),
+  ('Premium',	4,	50.0,		'1 year',		'USD', '2018-08-25',false ),
+  ('Premium',	7,	1.340,		'12 month',		'CNY', '2019-10-16', false),
+  ('Ultimate',	8,	3.20,		'12 month',		'CNY', '2018-02-13', false),
+  ('Ultimate',	4,	34.00,		'1.5 month',	'CNY', '2015-01-16', true),
+  ('Ultimate',	4,	34.10,		'4 month',		'CNY', '2021-06-10', true);
 
 -- --! PC x 50 --------------------------------------------------
 

@@ -117,7 +117,8 @@ export default function componentStyleOverrides(theme) {
                 input: {
                     fontWeight: 500,
                     background: bgColor,
-                    padding: '15.5px 14px',
+                    padding: '18px 14px',
+                    // padding: '15.5px 14px',
                     borderRadius: `${theme?.customization?.borderRadius}px`,
                     '&.MuiInputBase-inputSizeSmall': {
                         padding: '10px 14px',
