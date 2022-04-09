@@ -8,6 +8,12 @@ export const getAllSubscriptions = async () => {
 };
 
 export const addSubscription = async (subscription) => {
+  subscription.cycle = `${subscription.billingCycle} ${subscription.billingCycleUnit}`;
+  delete subscription.submit;
+  delete subscription.billingCycle;
+  delete subscription.billingCycleUnit;
+  console.log("POST subscription");
+  console.log(subscription);
   const response = await fetch(`${API_ENDPOINT}/subscription`, {
     method: "POST",
     body: JSON.stringify(subscription),
@@ -15,8 +21,25 @@ export const addSubscription = async (subscription) => {
       "Content-Type": "application/json",
     },
   });
-
   const newSubscription = await response.json();
 
   return newSubscription;
+};
+
+export const updateSubscription = async (subscription) => {
+  subscription.cycle = `${subscription.billingCycle} ${subscription.billingCycleUnit}`;
+  delete subscription.submit;
+  delete subscription.billingCycle;
+  delete subscription.billingCycleUnit;
+  console.log("PUT subscription");
+  console.log(subscription);
+  const response = await fetch(`${API_ENDPOINT}/subscription/${subscription.id}`, {
+    method: "PUT",
+    body: JSON.stringify(subscription),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  return response.status;
 };

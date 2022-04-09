@@ -6,7 +6,7 @@ export const getAllApps = async () => {
   return apps;
 };
 
-export const getSubscription = async () => {
-  await fetch(`${API_ENDPOINT}/subscription/`);
-  return null;
+export const updateSubscription = async () => {
+  // await fetch(`${API_ENDPOINT}/subscription/`);
+  // return null;
 }

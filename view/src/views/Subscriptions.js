@@ -73,9 +73,9 @@ const Subscriptions = () => {
         // console.log(appList);
         subscriptionsPerApp = preprocessData(appList, subscriptionsPerApp)
 
-        console.log("Preprocessed data: ")
-        console.log(subscriptionsPerApp);
-        console.log(appList);
+        // console.log("Preprocessed data: ")
+        // console.log(subscriptionsPerApp);
+        // console.log(appList);
 
         setSubscriptions(subscriptionsPerApp)
         setApps(appList)
@@ -95,9 +95,9 @@ const Subscriptions = () => {
 
             subscriptionsPerApp = preprocessData(appList, subscriptionsPerApp)
 
-            console.log("Preprocessed data: ")
-            console.log(subscriptionsPerApp);
-            console.log(appList);
+            // console.log("Preprocessed data: ")
+            // console.log(subscriptionsPerApp);
+            // console.log(appList);
 
             setSubscriptions(subscriptionsPerApp)
             setApps(appList)
@@ -108,8 +108,11 @@ const Subscriptions = () => {
     const SubBox = ({ subscription }) => {
         const { name, price, monetaryUnit, billingCycle, billingCycleUnit } = subscription;
         const [open, setOpen] = useState(false);
-        const priceString = price === 0 ? 'Free' : `${price} ${monetaryUnit}`;
-        const billingCycleString = `${billingCycle} ${billingCycleUnit.charAt(0).toUpperCase() + billingCycleUnit.slice(1)} `;
+        // console.log(typeof price)
+        const priceString = (Number(price) === 0) ? 'Free' : `${price} ${monetaryUnit}`;
+        const tailIndex = billingCycle > 1 ? billingCycleUnit.length : billingCycleUnit.length - 1;
+        const billingCycleString = `${billingCycle} ${billingCycleUnit.charAt(0).toUpperCase() + billingCycleUnit.slice(1, tailIndex)} `;
+
 
         // TODO Change color based on billing cycle and application
         const darkColorText = false;
@@ -214,7 +217,7 @@ const Subscriptions = () => {
                     open={open}
                     onClose={handleClose}>
                     <DialogContent>
-                        <SubscriptionForm title={newSubTitle} setOpen={setOpen} setDialogClosed={setDialogClosed} isDialogClosed={isDialogClosed} isEdit={false} />
+                        <SubscriptionForm title={newSubTitle} setOpen={setOpen} setDialogClosed={setDialogClosed} isDialogClosed={isDialogClosed} isEdit={false} appid={app.id} />
                     </DialogContent>
                 </Dialog>
 

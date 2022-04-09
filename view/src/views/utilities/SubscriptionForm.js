@@ -29,16 +29,18 @@ import { LocalizationProvider } from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { DatePicker } from 'formik-mui-lab';
 
-import { addSubscription } from 'api/subscriptionAPI';
+import { addSubscription, updateSubscription } from 'api/subscriptionAPI';
 // ======================|| New Subscription Form ||======================== //
 
-const SubscriptionForm = ({ title, setOpen, isDialogClosed, setDialogClosed, isEdit, subscription }) => {
+const SubscriptionForm = ({ title, setOpen, isDialogClosed, setDialogClosed, isEdit, subscription, appid}) => {
     const theme = useTheme();
     const scriptedRef = useScriptRef();
     const matchDownSM = useMediaQuery(theme.breakpoints.down('sm'));
     const monetaryUnitList = [
         'CNY', 'USD', 'EUR', 'GBP', 'AUD', 'JPY', 'CAD', 'NZD', 'MOP', 'HKD', 'TWD', 'KRW', 'RUB']
     const timeUnitList = ['Day', 'Week', 'Month', 'Year']; // 'Quarter'
+
+    const buttonText = isEdit ? 'Update' : 'Add';
 
     if (isEdit) {
         // format subscription for editing
@@ -57,7 +59,7 @@ const SubscriptionForm = ({ title, setOpen, isDialogClosed, setDialogClosed, isE
             monetaryUnit: 'CNY',
             startDate: new Date(),
             billingCycle: 1,
-            billingCycleUnit: 'Month',
+            billingCycleUnit: 'Months',
             autoRenewal: true,
             submit: null
         }
@@ -82,28 +84,27 @@ const SubscriptionForm = ({ title, setOpen, isDialogClosed, setDialogClosed, isE
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
                     try {
                         console.log(values);
-                        const postData = {
-                            name: values.name,
-                            data: {
-                                cycle: `${values.billingCycle} ${values.billingCycleUnit}`,
-                                price: values.price === 0 ? 'Free' : `${values.price} ${values.monetaryUnit}`,
-                            }
+                        let response;
+                        if (isEdit) {
+                            response = await updateSubscription(values); 
+                        } else {
+                            values.appid = appid
+                            response = await addSubscription(values);
                         }
-                        const response = await addSubscription(postData);
                         console.log(response)
                         setOpen(false)
                         setDialogClosed(!isDialogClosed)
-                        if (scriptedRef.current) {
-                            setStatus({ success: true });
-                            setSubmitting(false);
-                        }
+                        // if (scriptedRef.current) {
+                        setStatus({ success: true });
+                        setSubmitting(false);
+                        // }
                     } catch (err) {
                         console.error(err);
-                        if (scriptedRef.current) {
-                            setStatus({ success: false });
-                            setErrors({ submit: err.message });
-                            setSubmitting(false);
-                        }
+                        // if (scriptedRef.current) {
+                        setStatus({ success: false });
+                        setErrors({ submit: err.message });
+                        setSubmitting(false);
+                        // }
                     }
                 }}
             >
@@ -303,7 +304,7 @@ const SubscriptionForm = ({ title, setOpen, isDialogClosed, setDialogClosed, isE
                                         color="secondary"
                                     >
                                         {/* Add */}
-                                        {isSubmitting ? <CircularProgress color="inherit" /> : 'Add'}
+                                        {isSubmitting ? <CircularProgress color="inherit" /> : buttonText}
                                     </Button>
                                 </AnimateButton>
                             </Box>
