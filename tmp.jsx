@@ -149,3 +149,49 @@ const aa = () => {
     }
 
 </>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<Grid item xs={12} container alignItems="center" justifyContent="center">
+<Box sx={{ mb: 2 }}>
+    <Typography variant="h3">{`Do you want to delete ${target.name}?`}</Typography>
+</Box>
+</Grid>
+<form noValidate onSubmit={handleSubmit}>
+{errors.submit && (
+    <Box sx={{ mt: 3 }}>
+        <FormHelperText error>{errors.submit}</FormHelperText>
+    </Box>
+)}
+<Box sx={{ mt: 2 }}>
+    <AnimateButton>
+        <Button
+            disableElevation
+            disabled={isSubmitting}
+            fullWidth
+            size="large"
+            type="submit"
+            variant="contained"
+            color="error"
+        >
+            {/* Add */}
+            {isSubmitting ? <CircularProgress color="inherit" /> : 'Delete'}
+        </Button>
+    </AnimateButton>
+</Box>
+</form>

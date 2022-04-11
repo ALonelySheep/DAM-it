@@ -8,38 +8,13 @@ const pool = new Pool({
     port: process.env.DB_PORT,
 });
 
-// TODO Add Monetary Unit and App id to be coherent with DB
-// const subscriptionList = [
-//     [
-//         {
-//             name: "Backend Subscription A",
-//             data: { cycle: '1 Year', price: '300 USD' },
-//         },
-//         {
-//             name: "Backend Subscription B",
-//             data: { cycle: '1 Month', price: '200 CHY' },
-//         }
-//     ],
-//     [
-//         {
-//             name: "Backend Subscription C",
-//             data: { cycle: '2 Weeks', price: '30 CAD' },
-//         },
-//         {
-//             name: "Backend Subscription D",
-//             data: { cycle: '3 Days', price: 'Free' },
-//         }
-//     ]
-// ]
-
-
 //?////////////////////
 //?  POST添加Subscription
 //?////////////////////
 exports.addSubscription = async (req, res) => {
     const { body } = req;
-    console.log("body")
-    console.log(body)
+    // console.log("body")
+    // console.log(body)
     const text = `INSERT INTO subscription 
     (name,appId,price,cycle,monetaryUnit,startDate,autoRenewal)
     VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *`;
@@ -53,17 +28,17 @@ exports.addSubscription = async (req, res) => {
         body.autoRenewal]
     // console.log(body)
     pool.connect((err, client, release) => {
-        console.log("connected: POST")
+        // console.log("connected: POST Subscription")
         if (err) {
             const errMsg = 'POST: error acquiring client'
             res.status(500).json(errMsg);
             return console.error(errMsg, err.stack)
         }
         client.query(text, values, async (err, result) => {
-            console.log("POST: query finished")
+            // console.log("POST: Subscription query finished")
             release()
             if (err) {
-                const errMsg = 'Error executing query: PUT'
+                const errMsg = 'Error executing query: POST'
                 res.status(500).json(errMsg);
                 return console.error(errMsg, err.stack)
             }
@@ -121,7 +96,27 @@ exports.updateSubscription = async (req, res) => {
 //?  DELETE删除Subscription
 //?////////////////////
 exports.deleteSubscription = async (req, res) => {
-
+    const text = `DELETE FROM subscription WHERE id = $1`;
+    const values = [req.params.id]
+    pool.connect((err, client, release) => {
+        // console.log("DELETE: connected")
+        if (err) {
+            const errMsg = 'DELETE: Error acquiring client'
+            res.status(500).json(errMsg);
+            return console.error(errMsg, err.stack)
+        }
+        client.query(text, values, async (err, result) => {
+            // console.log("'DELETE: query finished")
+            release()
+            if (err) {
+                const errMsg = 'DELETE: Error executing query'
+                res.status(500).json(errMsg);
+                return console.error(errMsg, err.stack)
+            }
+            // console.log(result)
+            res.status(200).send();
+        })
+    })
 }
 
 
@@ -135,18 +130,33 @@ const formatSubsInfoForFrontend = async (subs) =>
         const price = sub.price.slice(1, sub.price.length);
         const monetaryUnit = sub.monetaryunit;
         const startDate = new Date(sub.startdate);
-        const [billingCycleUnit, billingCycle] = Object.entries(sub.cycle)[0]
         const autoRenewal = sub.autorenewal;
         const id = sub.id;
         const appid = sub.appid;
 
-        //? Date formatting
-        // let billingCycleString = '';
-        // for (const [key, value] of Object.entries(sub.cycle)) {
-        //     billingCycleString += `${value} ${key.charAt(0).toUpperCase() + key.slice(1)} `;
-        // }
-        // billingCycleString = billingCycleString.trim()
-
+        //? Date formatting: Billing Cycle
+        //? 1. only 1 time uint
+        //? 2. convert days to weeks if possible
+        let billingCycle, billingCycleUnit;
+        if (Object.entries(sub.cycle).length !== 1) {
+            const arr = Object.entries(sub.cycle);
+            if (arr.length !== 2 || arr[0][0] !== 'years') {
+                console.error('Error: invalid inverval format');
+                [billingCycleUnit, billingCycle] = Object.entries(sub.cycle)[0]
+            } else {
+                billingCycle = arr[0][1] * 12 + arr[1][1];
+                billingCycleUnit = arr[1][0];
+            }
+        } else {
+            [billingCycleUnit, billingCycle] = Object.entries(sub.cycle)[0]
+        }
+        if (billingCycleUnit === 'days' && billingCycle % 7 === 0
+            && billingCycle / 7 < 20
+        ) {
+            billingCycle = billingCycle / 7;
+            billingCycleUnit = 'weeks';
+        }
+        // console.log(Object.entries(sub.cycle))
         return { id, appid, name, price, monetaryUnit, startDate, billingCycle, billingCycleUnit, autoRenewal };
 
     })
@@ -162,8 +172,8 @@ exports.queryAllSubscriptions = async (req, res) => {
             res.status(500).json(errMsg);
             return console.error(errMsg, err.stack)
         }
-        client.query('SELECT * FROM subscription ORDER BY appid ASC', async (err, result) => {
-            console.log("query finished")
+        client.query('SELECT * FROM subscription ORDER BY appid, id ASC', async (err, result) => {
+            // console.log("GET query finished")
             release()
             if (err) {
                 const errMsg = 'Error executing query'
@@ -172,6 +182,7 @@ exports.queryAllSubscriptions = async (req, res) => {
             }
             // console.log("----------------SUBSCRIPTIONS---------------------")
             const processedData = await formatSubsInfoForFrontend(result.rows);
+            // console.log("processedData")
             // console.log(processedData)
             res.status(200).json(processedData);
         })

@@ -32,9 +32,9 @@ import { DatePicker } from 'formik-mui-lab';
 import { addSubscription, updateSubscription } from 'api/subscriptionAPI';
 // ======================|| New Subscription Form ||======================== //
 
-const SubscriptionForm = ({ title, setOpen, isDialogClosed, setDialogClosed, isEdit, subscription, appid}) => {
+const SubscriptionForm = ({ title, setOpen, setLoading, isDialogClosed, setDialogClosed, isEdit, subscription, appid }) => {
     const theme = useTheme();
-    const scriptedRef = useScriptRef();
+    // const scriptedRef = useScriptRef();
     const matchDownSM = useMediaQuery(theme.breakpoints.down('sm'));
     const monetaryUnitList = [
         'CNY', 'USD', 'EUR', 'GBP', 'AUD', 'JPY', 'CAD', 'NZD', 'MOP', 'HKD', 'TWD', 'KRW', 'RUB']
@@ -51,6 +51,7 @@ const SubscriptionForm = ({ title, setOpen, isDialogClosed, setDialogClosed, isE
         // ? Capitalize first letter & remove 's'
         // subscription.billingCycleUnit = raw.charAt(0).toUpperCase() + raw.slice(1, raw.slice(raw.length - 1, raw.length) === 's' ? raw.length - 1 : raw.length);
     }
+    console.log('isEdit', isEdit)
 
     const initialValues = isEdit ? subscription :
         {
@@ -77,41 +78,43 @@ const SubscriptionForm = ({ title, setOpen, isDialogClosed, setDialogClosed, isE
                 initialValues={initialValues}
                 validationSchema={Yup.object().shape({
                     price: Yup.number().min(0, "Price can't be negative").lessThan(10000, "Price can't be that high").required(),
-                    billingCycle: Yup.number().integer("Must be a integer").moreThan(0, "You can't reverse time").lessThan(100, "Please change your time unit").required(),
+                    billingCycle: Yup.number().integer("Must be a integer").moreThan(0, "You can't reverse time").lessThan(1000, "Please change your time unit").required(),
                     name: Yup.string().max(255).required('Name is required'),
                     monetaryUnit: Yup.string().required('Monetary unit is required'),
                 })}
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+                    // e.preventDefault();
                     try {
+                        console.log("Form values");
                         console.log(values);
                         let response;
                         if (isEdit) {
-                            response = await updateSubscription(values); 
+                            response = await updateSubscription(values);
                         } else {
                             values.appid = appid
                             response = await addSubscription(values);
                         }
+                        console.log("response from server")
                         console.log(response)
                         setOpen(false)
-                        setDialogClosed(!isDialogClosed)
-                        // if (scriptedRef.current) {
-                        setStatus({ success: true });
                         setSubmitting(false);
-                        // }
+                        setStatus({ success: true });
+                        setDialogClosed(!isDialogClosed) // 这个一定要放在最后！！！！ 关闭之后马上就开始useEffect了，而在useEffect里面的动作开始之前，必须Form要unMount，否则会冲突。
+                        setLoading(true)
                     } catch (err) {
                         console.error(err);
-                        // if (scriptedRef.current) {
                         setStatus({ success: false });
                         setErrors({ submit: err.message });
                         setSubmitting(false);
-                        // }
                     }
                 }}
             >
                 {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
+
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <form noValidate onSubmit={handleSubmit}>
                             {/* Name */}
+                            {/* {console.log(values)} */}
                             <Grid container>
                                 <Grid item xs={12}>
                                     <FormControl
@@ -123,7 +126,7 @@ const SubscriptionForm = ({ title, setOpen, isDialogClosed, setDialogClosed, isE
                                         <OutlinedInput
                                             id="outlined-adornment-app-name"
                                             type="text"
-                                            value={values.name}
+                                            value={values.name ?? ''}
                                             name="name"
                                             onBlur={handleBlur}
                                             onChange={handleChange}
@@ -150,7 +153,7 @@ const SubscriptionForm = ({ title, setOpen, isDialogClosed, setDialogClosed, isE
                                         <OutlinedInput
                                             id="outlined-adornment-price"
                                             type="number"
-                                            value={values.price}
+                                            value={values.price ?? 0}
                                             name="price"
                                             onBlur={handleBlur}
                                             onChange={handleChange}
@@ -179,13 +182,13 @@ const SubscriptionForm = ({ title, setOpen, isDialogClosed, setDialogClosed, isE
                                             id="monetary-unit-select"
                                             name="monetaryUnit"
                                             label="Monetary Unit"
-                                            value={values.monetaryUnit}
+                                            value={values.monetaryUnit ?? ''}
                                             onChange={handleChange}
                                         >
                                             {monetaryUnitList.map((item) => (
                                                 <MenuItem
                                                     key={item}
-                                                    value={item}
+                                                    value={item ?? ''}
                                                 >{item}</MenuItem>
                                             ))}
                                         </Select>
@@ -224,7 +227,7 @@ const SubscriptionForm = ({ title, setOpen, isDialogClosed, setDialogClosed, isE
                                         <OutlinedInput
                                             id="outlined-adornment-billingCycle"
                                             type="number"
-                                            value={values.billingCycle}
+                                            value={values.billingCycle ?? 0}
                                             name="billingCycle"
                                             onBlur={handleBlur}
                                             onChange={handleChange}
@@ -248,13 +251,13 @@ const SubscriptionForm = ({ title, setOpen, isDialogClosed, setDialogClosed, isE
                                             id="billing-cycle-unit-select"
                                             name="billingCycleUnit"
                                             label="Time Unit"
-                                            value={values.billingCycleUnit}
+                                            value={values.billingCycleUnit ?? ''}
                                             onChange={handleChange}
                                         >
                                             {timeUnitList.map((item) => (
                                                 <MenuItem
                                                     key={item}
-                                                    value={`${item}s`}
+                                                    value={`${item}s` ?? ''}
                                                 >{item}</MenuItem>
                                             ))}
                                         </Select>
@@ -272,7 +275,7 @@ const SubscriptionForm = ({ title, setOpen, isDialogClosed, setDialogClosed, isE
                                     <FormControlLabel
                                         control={
                                             <Checkbox
-                                                checked={values.autoRenewal}
+                                                checked={values.autoRenewal ?? null}
                                                 onChange={handleChange}
                                                 name="autoRenewal"
                                                 color="primary"

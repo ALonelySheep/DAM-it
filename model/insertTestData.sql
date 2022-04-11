@@ -164,7 +164,7 @@ VALUES
   ('Premium',	4,	50.0,		'1 year',		'USD', '2018-08-25',false ),
   ('Premium',	7,	1.340,		'12 month',		'CNY', '2019-10-16', false),
   ('Ultimate',	8,	3.20,		'12 month',		'CNY', '2018-02-13', false),
-  ('Ultimate',	4,	34.00,		'1.5 month',	'CNY', '2015-01-16', true),
+  ('Ultimate',	4,	34.00,		'1.52 year',	'CNY', '2015-01-16', true),
   ('Ultimate',	4,	34.10,		'4 month',		'CNY', '2021-06-10', true);
 
 -- --! PC x 50 --------------------------------------------------

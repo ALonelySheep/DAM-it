@@ -30,14 +30,14 @@ CREATE TABLE subscription(
 CREATE TABLE paiedContent(
     id              SERIAL          PRIMARY KEY,
     name            VARCHAR(40)     NOT NULL,    
-    appId           SERIAL          REFERENCES app(id) ,
+    appId           SERIAL          REFERENCES app(id)  ON DELETE CASCADE,
     price           MONEY           DEFAULT 0,
     monetaryUnit    varchar(10)     DEFAULT 'CNY'       NOT NULL
 );
 
 CREATE TABLE installation(
     userId          SERIAL          REFERENCES userAccount(id) ,
-    appId           SERIAL          REFERENCES app(id) ,
+    appId           SERIAL          REFERENCES app(id) ON DELETE CASCADE,
     ifUninstalled   BOOLEAN         DEFAULT false,
     date            DATE            ,
     category        varchar(20) 	DEFAULT 'Not Specified'     
@@ -45,7 +45,7 @@ CREATE TABLE installation(
 
 CREATE TABLE renewal(
     userId          SERIAL          REFERENCES userAccount(id) ,
-    subscriptionId  SERIAL          REFERENCES subscription(id) ,
+    subscriptionId  SERIAL          REFERENCES subscription(id) ON DELETE CASCADE,
     startDate       DATE            ,
     numberOfRenewal INTEGER         DEFAULT 0,
     reminder        BOOLEAN         DEFAULT false,
@@ -54,7 +54,7 @@ CREATE TABLE renewal(
 
 CREATE TABLE purchase(
     userId          SERIAL          REFERENCES userAccount(id) ,
-    paiedContentId  SERIAL          REFERENCES paiedContent(id) ,
+    paiedContentId  SERIAL          REFERENCES paiedContent(id) ON DELETE CASCADE,
     date            DATE            ,
     timeLimit       INTERVAL        DEFAULT NULL, --NULL represents forever
     category        varchar(20) 	DEFAULT 'Not Specified'

@@ -9,16 +9,16 @@ const pool = new Pool({
 });
 
 
-const appList = [
-    {
-        id: 1,
-        name: "backend App A",
-    },
-    {
-        id: 2,
-        name: "backend App B",
-    }
-]
+// const appList = [
+//     {
+//         id: 1,
+//         name: "backend App A",
+//     },
+//     {
+//         id: 2,
+//         name: "backend App B",
+//     }
+// ]
 
 
 //?////////////////////
@@ -26,19 +26,97 @@ const appList = [
 //?////////////////////
 exports.addApp = async (req, res) => {
     const { body } = req;
-    const { name } = body;
-
-    const newApp = {
-        id: appList.length + 1,
-        name
-    };
-
-    appList.push(newApp);
-
-    res.json(newApp);
+    console.log("Add App: body")
+    console.log(body)
+    const text = `INSERT INTO app 
+    (name, price, monetaryUnit)
+    VALUES ($1,$2,$3) RETURNING *`;
+    const values = [
+        body.name,
+        body.price,
+        body.monetaryUnit]
+    pool.connect((err, client, release) => {
+        console.log("connected: POST APP")
+        if (err) {
+            const errMsg = 'POST: error acquiring client'
+            res.status(500).json(errMsg);
+            return console.error(errMsg, err.stack)
+        }
+        client.query(text, values, async (err, result) => {
+            console.log("POST: query finished")
+            release()
+            if (err) {
+                const errMsg = 'Error executing query: POST'
+                res.status(500).json(errMsg);
+                return console.error(errMsg, err.stack)
+            }
+            console.log(result.rows)
+            res.status(200).json(result.rows);
+        })
+    })
 }
 
-
+//?////////////////////
+//?  PUT更新App
+//?////////////////////
+exports.updateApp = async (req, res) => {
+    const { body } = req;
+    const text = `UPDATE app 
+    SET name = $1,
+        price = $2,
+        monetaryUnit = $3
+    WHERE id = $4 RETURNING *`;
+    const values = [
+        body.name,
+        body.price,
+        body.monetaryUnit,
+        body.id]
+    pool.connect((err, client, release) => {
+        console.log("connected: PUT App")
+        if (err) {
+            const errMsg = 'PUT: error acquiring client'
+            res.status(500).json(errMsg);
+            return console.error(errMsg, err.stack)
+        }
+        client.query(text, values, async (err, result) => {
+            console.log("PUT APP: query finished")
+            release()
+            if (err) {
+                const errMsg = 'Error executing query: PUT'
+                res.status(500).json(errMsg);
+                return console.error(errMsg, err.stack)
+            }
+            console.log(result.rows)
+            res.status(200).json(result.rows);
+        })
+    })
+}
+//?////////////////////
+//?  DELETE删除App
+//?////////////////////
+exports.deleteApp = async (req, res) => {
+    const text = `DELETE FROM app WHERE id = $1`;
+    const values = [req.params.id]
+    pool.connect((err, client, release) => {
+        console.log("DELETE App: connected")
+        if (err) {
+            const errMsg = 'DELETE App: Error acquiring client'
+            res.status(500).json(errMsg);
+            return console.error(errMsg, err.stack)
+        }
+        client.query(text, values, async (err, result) => {
+            console.log("'DELETE App: query finished")
+            release()
+            if (err) {
+                const errMsg = 'DELETE App: Error executing query'
+                res.status(500).json(errMsg);
+                return console.error(errMsg, err.stack)
+            }
+            // console.log(result)
+            res.status(200).send();
+        })
+    })
+}
 //?////////////////////
 //?  GET获取App
 //?////////////////////
@@ -48,17 +126,9 @@ const formatAppinfo = async (apps) =>
         const name = app.name;
         const price = app.price.slice(1, app.price.length);
         const monetaryUnit = app.monetaryunit;
-
-        //? Date formatting
-        // let billingCycleString = '';
-        // for (const [key, value] of Object.entries(app.cycle)) {
-        //     billingCycleString += `${value} ${key.charAt(0).toUpperCase() + key.slice(1)} `;
-        // }
-        // billingCycleString = billingCycleString.trim()
-
         return { id, name, price, monetaryUnit };
-
     })
+
 exports.queryAllApps = async (req, res) => {
     pool.connect((err, client, release) => {
         if (err) {
@@ -66,7 +136,7 @@ exports.queryAllApps = async (req, res) => {
             res.status(500).json(errMsg);
             return console.error(errMsg, err.stack)
         }
-        client.query('SELECT * FROM app', async (err, result) => {
+        client.query('SELECT * FROM app ORDER BY id ASC', async (err, result) => {
             release()
             if (err) {
                 const errMsg = 'Error executing query'
@@ -80,25 +150,3 @@ exports.queryAllApps = async (req, res) => {
         })
     })
 }
-
-
-
-// exports.getAllApps = async (req, res) => {
-//     res.json(appList);
-// }
-
-// exports.getApp = async (req, res) => {
-//     // TODO Finish this!
-//     const { id } = req.params;
-
-//     // Find the restaurant with the matching id.
-//     const book = ALL_BOOKS.find((book) => book.id === id);
-
-//     // If the restaurant doesn't exist, let the client know.
-//     if (!book) {
-//         res.sendStatus(404);
-//         return;
-//     }
-
-//     res.json(book);
-// }
