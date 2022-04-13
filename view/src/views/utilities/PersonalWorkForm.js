@@ -3,10 +3,9 @@ import { useTheme } from '@mui/material/styles';
 import {
     Box,
     Button,
-    CircularProgress,
-    // Checkbox,
-    // FormControlLabel,
+    Checkbox,
     FormControl,
+    FormControlLabel,
     FormHelperText,
     Grid,
     InputLabel,
@@ -15,43 +14,37 @@ import {
     useMediaQuery,
     MenuItem,
     Select,
+    CircularProgress
 } from '@mui/material';
 
 // third party
 import * as Yup from 'yup';
-import { Formik } from 'formik';
+import { Formik, Field } from 'formik';
 import { useAuth } from 'AuthProvider'
 // project imports
-// import useScriptRef from 'hooks/useScriptRef';
 import AnimateButton from 'ui-component/extended/AnimateButton';
+import { addPersonalWork, updatePersonalWork } from 'api/personalWorkAPI';
 
-import { addApp, updateApp, deleteApp } from 'api/appAPI';
-// ======================|| New App Form ||======================== //
+// ======================|| New PersonalWork Form ||======================== //
 
-const AppForm = ({ title, setOpen, setLoading, isDialogClosed, setDialogClosed, isEdit, app }) => {
+const PersonalWorkForm = ({ title, setOpen, setLoading, isDialogClosed, setDialogClosed, isEdit, personalWork, deviceid }) => {
     const theme = useTheme();
     // Authentication
     const auth = useAuth();
-    // const scriptedRef = useScriptRef();
     const matchDownSM = useMediaQuery(theme.breakpoints.down('sm'));
-    const monetaryUnitList = [
-        'CNY', 'USD', 'EUR', 'GBP', 'AUD', 'JPY', 'CAD', 'NZD', 'MOP', 'HKD', 'TWD', 'KRW', 'RUB']
-
+   
     const buttonText = isEdit ? 'Update' : 'Add';
 
     if (isEdit) {
-        app.submit = null;
-        app.isDelete = false;
+        personalWork.submit = null;
     }
-    // console.log('isEdit', isEdit)
 
-    const initialValues = isEdit ? app :
+    const initialValues = isEdit ? personalWork :
         {
             name: '',
-            price: 0,
-            monetaryUnit: 'CNY',
-            submit: null,
-            isDelete: false,
+            copyright: '',
+            category: '',
+            submit: null
         }
 
     return (
@@ -66,28 +59,24 @@ const AppForm = ({ title, setOpen, setLoading, isDialogClosed, setDialogClosed, 
             <Formik
                 initialValues={initialValues}
                 validationSchema={Yup.object().shape({
-                    price: Yup.number().min(0, "Price can't be negative").lessThan(10000, "Price can't be that high").required(),
                     name: Yup.string().max(255).required('Name is required'),
-                    monetaryUnit: Yup.string().required('Monetary unit is required'),
+                    copyright: Yup.string().max(40, 'Copyright is too long'),
+                    category: Yup.string().max(20, 'Category text is too long'),
                 })}
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
                     // e.preventDefault();
                     try {
-                        // console.log("Form values");
-                        // console.log(values);
-                        // console.log("is Delete");
-                        // console.log(values.isDelete);
+                        console.log("Form values");
+                        console.log(values);
                         let response;
                         if (isEdit) {
-                            if (values.isDelete)
-                                response = await deleteApp(auth.userInfo.token, values.id);
-                            else
-                                response = await updateApp(auth.userInfo.token, values);
+                            response = await updatePersonalWork(auth.userInfo.token, values);
                         } else {
-                            response = await addApp(auth.userInfo.token, values);
+                            values.deviceid = deviceid
+                            response = await addPersonalWork(auth.userInfo.token, values);
                         }
-                        console.log("response from server")
-                        console.log(response)
+                        // console.log("response from server")
+                        // console.log(response)
                         setOpen(false)
                         setSubmitting(false);
                         setStatus({ success: true });
@@ -101,8 +90,9 @@ const AppForm = ({ title, setOpen, setLoading, isDialogClosed, setDialogClosed, 
                     }
                 }}
             >
-                {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values, setFieldValue }) => (
-                    <form noValidate >
+                {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
+
+                    <form noValidate onSubmit={handleSubmit}>
                         {/* Name */}
                         {/* {console.log(values)} */}
                         <Grid container>
@@ -114,7 +104,7 @@ const AppForm = ({ title, setOpen, setLoading, isDialogClosed, setDialogClosed, 
                                 >
                                     <InputLabel htmlFor="outlined-adornment-name">Name</InputLabel>
                                     <OutlinedInput
-                                        id="outlined-adornment-app-name"
+                                        id="outlined-adornment-device-name"
                                         type="text"
                                         value={values.name ?? ''}
                                         name="name"
@@ -136,54 +126,50 @@ const AppForm = ({ title, setOpen, setLoading, isDialogClosed, setDialogClosed, 
                             <Grid item xs={12} sm={6}>
                                 <FormControl
                                     fullWidth
-                                    error={Boolean(touched.price && errors.price)}
+                                    error={Boolean(touched.copyright && errors.copyright)}
                                     sx={{ ...theme.typography.customInput }}
                                 >
-                                    <InputLabel htmlFor="outlined-adornment-price">Price</InputLabel>
+                                    <InputLabel htmlFor="outlined-adornment-copyright">Copyright</InputLabel>
                                     <OutlinedInput
-                                        id="outlined-adornment-price"
-                                        type="number"
-                                        value={values.price ?? 0}
-                                        name="price"
+                                        id="outlined-adornment-copyright"
+                                        type="text"
+                                        value={values.copyright ?? 0}
+                                        name="copyright"
                                         onBlur={handleBlur}
                                         onChange={handleChange}
                                         inputProps={{}}
                                     />
-                                    {touched.price && errors.price && (
-                                        <FormHelperText error id="standard-weight-helper-text--price">
-                                            {errors.price}
+                                    {touched.copyright && errors.copyright && (
+                                        <FormHelperText error id="standard-weight-helper-text--copyright">
+                                            {errors.copyright}
                                         </FormHelperText>
                                     )}
                                 </FormControl>
                             </Grid>
-                            {/* Monetary Unit */}
                             <Grid item xs={12} sm={6}>
                                 <FormControl
                                     fullWidth
-                                    sx={{
-                                        marginTop: 1,
-                                        marginBottom: 1,
-                                        padding: '0 !important',
-                                    }}
+                                    error={Boolean(touched.category && errors.category)}
+                                    sx={{ ...theme.typography.customInput }}
                                 >
-                                    <InputLabel id="monetary-unit-select-label">Monetary Unit</InputLabel>
-                                    <Select
-                                        labelId="monetary-unit-select-label"
-                                        id="monetary-unit-select"
-                                        name="monetaryUnit"
-                                        label="Monetary Unit"
-                                        value={values.monetaryUnit ?? ''}
+                                    <InputLabel htmlFor="outlined-adornment-category">Category</InputLabel>
+                                    <OutlinedInput
+                                        id="outlined-adornment-category"
+                                        type="text"
+                                        value={values.category ?? 0}
+                                        name="category"
+                                        onBlur={handleBlur}
                                         onChange={handleChange}
-                                    >
-                                        {monetaryUnitList.map((item) => (
-                                            <MenuItem
-                                                key={item}
-                                                value={item ?? ''}
-                                            >{item}</MenuItem>
-                                        ))}
-                                    </Select>
+                                        inputProps={{}}
+                                    />
+                                    {touched.category && errors.category && (
+                                        <FormHelperText error id="standard-weight-helper-text--category">
+                                            {errors.category}
+                                        </FormHelperText>
+                                    )}
                                 </FormControl>
                             </Grid>
+
                         </Grid>
 
 
@@ -203,43 +189,17 @@ const AppForm = ({ title, setOpen, setLoading, isDialogClosed, setDialogClosed, 
                                     type="submit"
                                     variant="contained"
                                     color="secondary"
-                                    value="submit"
-                                    onClick={(e) => {
-                                        setFieldValue('isDelete', false)
-                                        handleSubmit(e);
-                                    }}
                                 >
                                     {/* Add */}
                                     {isSubmitting ? <CircularProgress color="inherit" /> : buttonText}
                                 </Button>
                             </AnimateButton>
                         </Box>
-                        {isEdit && <Box sx={{ mt: 2 }}>
-                            <AnimateButton>
-                                <Button
-                                    disableElevation
-                                    disabled={isSubmitting}
-                                    fullWidth
-                                    size="large"
-                                    type="submit"
-                                    variant="contained"
-                                    color="error"
-                                    onClick={(e) => {
-                                        setFieldValue('isDelete', true)
-                                        handleSubmit(e);
-                                    }}
-                                >
-                                    {/* Add */}
-                                    {isSubmitting ? <CircularProgress color="inherit" /> : 'Delete'}
-                                </Button>
-                            </AnimateButton>
-                        </Box>}
                     </form>
-
                 )}
             </Formik>
         </>
     );
 };
 
-export default AppForm;
+export default PersonalWorkForm;

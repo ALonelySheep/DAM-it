@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import { useState, useEffect, lazy } from 'react';
 import { useAuth } from 'AuthProvider'
+
 // project imports
 import SubCard from 'ui-component/cards/SubCard';
 import MainCard from 'ui-component/cards/MainCard';
@@ -21,15 +22,14 @@ import Loadable from 'ui-component/Loadable';
 import { gridSpacing } from 'store/constant';
 
 // API
-import { deleteSubscription, getAllSubscriptions } from 'api/subscriptionAPI';
-import { getAllApps } from 'api/appAPI';
+import { deletePersonalWork, getAllPersonalWorks } from 'api/personalWorkAPI';
+import { getAllDevices } from 'api/deviceAPI';
 
 // =================|| Dialog Components ||================== //
 import DeleteConfirmation from 'views/utilities/DeleteConfirmation';
 
-const SubscriptionForm = Loadable(lazy(() => import('views/utilities/SubscriptionForm')));
-const AppForm = Loadable(lazy(() => import('views/utilities/AppForm')));
-
+const PersonalWorkForm = Loadable(lazy(() => import('views/utilities/PersonalWorkForm')));
+const DeviceForm = Loadable(lazy(() => import('views/utilities/DeviceForm')));
 
 // =====================|| Auxilary ||======================= //
 const groupBy = (array, key) => array.reduce((result, currentValue) => {
@@ -41,38 +41,37 @@ const groupBy = (array, key) => array.reduce((result, currentValue) => {
     return result;
 }, {}); // empty object is the initial value for result object
 
-const preprocessData = (apps, subs) => {
-    // Group Subs by Appid
+const preprocessData = (devices, subs) => {
+    // Group Subs by Deviceid
     // console.log('preprocessing...')
     // console.log(subs);
-    const subsGrouped = groupBy(subs, 'appid');
-    for (let i = 0; i < apps.length; i += 1) {
-        if (!subsGrouped[apps[i].id])
-            subsGrouped[apps[i].id] = [];
+    const subsGrouped = groupBy(subs, 'deviceid');
+    for (let i = 0; i < devices.length; i += 1) {
+        if (!subsGrouped[devices[i].id])
+            subsGrouped[devices[i].id] = [];
     }
     return subsGrouped;
 }
 
 // ==============================|| Main Component ||=============================== //
-//* Haven't figure out how to only rerender the affected components
-//* Page flashes after adding a subscription, which is kinda annoying
-//* Add more color for subscriptions
+//* Add dynamic category for personal work
 
 
-const Subscriptions = () => {
+const PersonalWorks = () => {
     // data
-    const [apps, setApps] = useState([]);
-    const [subscriptions, setSubscriptions] = useState([]);
+    const [devices, setDevices] = useState([]);
+    const [personalWorks, setPersonalWorks] = useState([]);
 
-    let subscriptionsPerApp
-    let appList
-    // Authentication
-    const auth = useAuth();
+    let personalWorksPerDevice
+    let deviceList
+
     // display state control
     const [isLoading, setLoading] = useState(true);
     const [isDialogClosed, setDialogClosed] = useState(false);
     const [isDeleteMode, setDeleteMode] = useState(false);
 
+    // Authentication
+    const auth = useAuth();
 
     useEffect(() => {
         let isMounted = true;
@@ -80,26 +79,26 @@ const Subscriptions = () => {
             // console.log('I\'m only supposed to show at first render!');
 
             // Get data from backend
-            subscriptionsPerApp = await getAllSubscriptions(auth.userInfo.token)
-            appList = await getAllApps(auth.userInfo.token);
+            deviceList = await getAllDevices(auth.userInfo.token);
+            personalWorksPerDevice = await getAllPersonalWorks(auth.userInfo.token)
             console.log("Raw Data From Backend：");
-            console.log(subscriptionsPerApp);
-            console.log(appList);
+            console.log(personalWorksPerDevice);
+            console.log(deviceList);
 
-            // preprocess data(Group Subs by Appid)
-            subscriptionsPerApp = preprocessData(appList, subscriptionsPerApp)
+            // preprocess data(Group Subs by Deviceid)
+            personalWorksPerDevice = preprocessData(deviceList, personalWorksPerDevice)
 
             console.log("Preprocessed data: ")
-            console.log(subscriptionsPerApp);
-            console.log(appList);
+            console.log(personalWorksPerDevice);
+            console.log(deviceList);
 
-            // setSubscriptions(subscriptionsPerApp)
-            // setApps(appList)
+            // setPersonalWorks(personalWorksPerDevice)
+            // setDevices(deviceList)
 
             // store data in state
             if (isMounted) {
-                setApps(prevState => Object.assign(prevState, appList));
-                setSubscriptions(prevState => Object.assign(prevState, subscriptionsPerApp));
+                setDevices(prevState => Object.assign(prevState, deviceList));
+                setPersonalWorks(prevState => Object.assign(prevState, personalWorksPerDevice));
             }
 
             // finish loading
@@ -108,31 +107,33 @@ const Subscriptions = () => {
         fetchData();
         return () => { isMounted = false };
     }, []);
+
     // useEffect(() => { console.log('rerendered') })
+
     useEffect(() => {
         // console.log('I\'m supposed to show every time the dialog closes!');
         let isMounted = true;
 
         async function fetchData() {
             if (!isLoading) {
-                subscriptionsPerApp = await getAllSubscriptions(auth.userInfo.token)
-                appList = await getAllApps(auth.userInfo.token)
+                deviceList = await getAllDevices(auth.userInfo.token)
+                personalWorksPerDevice = await getAllPersonalWorks(auth.userInfo.token)
 
-                subscriptionsPerApp = preprocessData(appList, subscriptionsPerApp)
+                personalWorksPerDevice = preprocessData(deviceList, personalWorksPerDevice)
 
-                console.log("Preprocessed data: ")
-                console.log(appList);
-                console.log(subscriptionsPerApp);
+                // console.log("Preprocessed data: ")
+                // console.log(deviceList);
+                // console.log(personalWorksPerDevice);
 
                 if (isMounted) {
-                    setApps(appList)
-                    setSubscriptions(subscriptionsPerApp)
+                    setDevices(deviceList)
+                    setPersonalWorks(personalWorksPerDevice)
                 }
                 // 下面的更新方式会导致显示更新延迟
-                // setSubscriptions(prevState => Object.assign(prevState, subscriptionsPerApp));
-                // setApps(prevState => Object.assign(prevState, appList));
-                // setSubscriptions(prevState => ({ ...prevState, ...subscriptionsPerApp }));
-                // setApps(prevState => ({ ...prevState, ...appList }));
+                // setPersonalWorks(prevState => Object.assign(prevState, personalWorksPerDevice));
+                // setDevices(prevState => Object.assign(prevState, deviceList));
+                // setPersonalWorks(prevState => ({ ...prevState, ...personalWorksPerDevice }));
+                // setDevices(prevState => ({ ...prevState, ...deviceList }));
                 setLoading(false);
             }
         }
@@ -141,16 +142,13 @@ const Subscriptions = () => {
     }, [isDialogClosed]);
 
 
-    const SubBox = ({ subscription }) => {
+    const SubBox = ({ personalWork }) => {
         const [open, setOpen] = useState(false);
         const darkColorText = false;
         // Props
-        const { name, price, monetaryUnit, billingCycle, billingCycleUnit } = subscription;
-        // Preprocessing: price, billingCycle, billingCycleUnit
-        const priceString = (Number(price) === 0) ? 'Free' : `${price} ${monetaryUnit}`;
-        // const billingCycleString = subscription.cycle
-        const tailIndex = billingCycle > 1 ? billingCycleUnit.length : billingCycleUnit.length - 1;
-        const billingCycleString = `${billingCycle} ${billingCycleUnit.charAt(0).toUpperCase() + billingCycleUnit.slice(1, tailIndex)} `;
+        const { name, copyright, category } = personalWork;
+        const copyrightString = (copyright === null) ? 'Not Specified' : copyright;
+        const categoryString = (category === null) ? 'Not Specified' : category;
 
         // Auxilary functions
         const handleClickOpen = () => {
@@ -174,14 +172,14 @@ const Subscriptions = () => {
                     <DialogContent>
                         {isDeleteMode ?
                             <DeleteConfirmation
-                                target={subscription}
+                                target={personalWork}
                                 setOpen={setOpen}
-                                setLoading={setLoading} setDialogClosed={setDialogClosed} isDialogClosed={isDialogClosed} API={deleteSubscription} /> :
-                            <SubscriptionForm
+                                setLoading={setLoading} setDialogClosed={setDialogClosed} isDialogClosed={isDialogClosed} API={deletePersonalWork} /> :
+                            <PersonalWorkForm
                                 title={name}
                                 setOpen={setOpen}
                                 setLoading={setLoading} setDialogClosed={setDialogClosed} isDialogClosed={isDialogClosed} isEdit
-                                subscription={subscription} />}
+                                personalWork={personalWork} />}
                     </DialogContent>
                 </Dialog>
 
@@ -195,7 +193,7 @@ const Subscriptions = () => {
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 py: 4.5,
-                                bgcolor: "primary.main",
+                                bgcolor: "orange.dark",
                                 // 这个是根据背景色改变字体颜色的, 防止字看不清
                                 color: darkColorText ? 'grey.800' : '#ffffff'
                             }}
@@ -210,15 +208,15 @@ const Subscriptions = () => {
                     </CardActionArea>
                 </Card>
                 {
-                    (priceString || billingCycleString) && (
+                    (copyrightString || categoryString) && (
                         <Grid container justifyContent="space-between" alignItems="center">
                             <Grid item>
                                 <Typography variant="subtitle1" sx={{ textTransform: 'uppercase' }}>
-                                    {priceString}
+                                    {copyrightString}
                                 </Typography>
                             </Grid>
                             <Grid item>
-                                <Typography variant="subtitle2">{billingCycleString}</Typography>
+                                <Typography variant="subtitle2">{categoryString}</Typography>
                             </Grid>
                         </Grid>
                     )
@@ -227,10 +225,10 @@ const Subscriptions = () => {
         )
     };
 
-    const NewSubscription = (props) => {
-        const { app } = props;
+    const NewPersonalWork = (props) => {
+        const { device } = props;
 
-        const newSubTitle = `New Subscription for ${app.name}`;
+        const newSubTitle = `New Work in ${device.name}`;
         const bgcolor = "grey.100"
         const darkColorText = true
         const [open, setOpen] = useState(false);
@@ -255,14 +253,14 @@ const Subscriptions = () => {
                     open={!isDeleteMode && open}
                     onClose={handleClose}>
                     <DialogContent>
-                        <SubscriptionForm
+                        <PersonalWorkForm
                             title={newSubTitle}
                             setOpen={setOpen}
                             setLoading={setLoading}
                             setDialogClosed={setDialogClosed}
                             isDialogClosed={isDialogClosed}
                             isEdit={false}
-                            appid={app.id} />
+                            deviceid={device.id} />
                     </DialogContent>
                 </Dialog>
 
@@ -292,8 +290,8 @@ const Subscriptions = () => {
         )
     };
 
-    const NewApp = () => {
-        const title = `New App`;
+    const NewDevice = () => {
+        const title = `New Device`;
         const bgcolor = "grey.100"
         const darkColorText = true
         const [open, setOpen] = useState(false);
@@ -315,7 +313,7 @@ const Subscriptions = () => {
                     open={!isDeleteMode && open}
                     onClose={handleClose}>
                     <DialogContent>
-                        <AppForm
+                        <DeviceForm
                             title={title}
                             setOpen={setOpen}
                             setLoading={setLoading}
@@ -372,8 +370,8 @@ const Subscriptions = () => {
         </Tooltip >
     );
 
-    const EditAppButton = ({ title, icon, app }) => {
-        const dialogTitle = title || `New App`;
+    const EditDeviceButton = ({ title, icon, device }) => {
+        const dialogTitle = `New Device`;
         const [open, setOpen] = useState(false);
 
         const handleClickOpen = () => {
@@ -393,7 +391,7 @@ const Subscriptions = () => {
                     open={!isDeleteMode && open}
                     onClose={handleClose}>
                     <DialogContent>
-                        <AppForm title={dialogTitle} setOpen={setOpen} setLoading={setLoading} setDialogClosed={setDialogClosed} isDialogClosed={isDialogClosed} app={app} isEdit />
+                        <DeviceForm title={dialogTitle} setOpen={setOpen} setLoading={setLoading} setDialogClosed={setDialogClosed} isDialogClosed={isDialogClosed} device={device} isEdit />
                     </DialogContent>
                 </Dialog>
                 <Tooltip title={title || 'Edit'} placement="left">
@@ -409,24 +407,24 @@ const Subscriptions = () => {
     }
 
 
-    const makeGridForSub = (subscription) => (
-        <Grid key={`${subscription.name}-${subscription.id}-${subscription.startDate}`} item xs={12} sm={6} md={4} lg={3}>
+    const makeGridForSub = (personalWork) => (
+        <Grid key={personalWork.id} item xs={12} sm={6} md={4} >
             {/* 上面的xs等等都是Breakpoints, 意思是在不同的情况下,一个box占的屏幕比例是不一样的 比如在小屏幕时, 一个box会占满整个屏幕, 而在大屏幕的的时候, 一个box只占用屏幕的2/12=六分之一 */}
             <SubBox
-                // {...subscription}
-                subscription={subscription}
-                key={`${subscription.name}-${subscription.id}-${subscription.startDate}`}
+                // {...personalWork}
+                personalWork={personalWork}
+                key={personalWork.id}
             />
         </Grid>
     )
 
-    const makeGridForApp = (app, subscriptions) => (
-        <Grid key={app.id} item xs={12}>
-            <SubCard key={app.id} title={app.name} secondary={<EditAppButton app={app} title={`Edit ${app.name}`} icon={<IconEdit />} />}>
-                <Grid key={app.id} container spacing={gridSpacing}>
-                    {subscriptions.map(makeGridForSub)}
-                    <Grid key="New" item xs={12} sm={6} md={4} lg={3}>
-                        <NewSubscription app={app} />
+    const makeGridForDevice = (device, personalWorks) => (
+        <Grid key={device.id} item xs={12}>
+            <SubCard key={device.id} title={device.name} secondary={<EditDeviceButton device={device} title='Edit this device' icon={<IconEdit />} />}>
+                <Grid key={device.id} container spacing={gridSpacing}>
+                    {personalWorks.map(makeGridForSub)}
+                    <Grid key="New" item xs={12} sm={6} md={4}>
+                        <NewPersonalWork device={device} />
                     </Grid>
                 </Grid>
             </SubCard>
@@ -443,15 +441,15 @@ const Subscriptions = () => {
         </MainCard>
     ) : (
         <MainCard
-            title="Subscriptions"
-            secondary={<DeleteModeButton title='Delete Subscriptions' icon={<IconTrash />} />}
+            title="PersonalWorks"
+            secondary={<DeleteModeButton title='Delete PersonalWorks' icon={<IconTrash />} />}
         >
             <Grid container spacing={gridSpacing}>
                 {
-                    apps.map((app) => (makeGridForApp(app, subscriptions[app.id])))
+                    devices.map((device) => (makeGridForDevice(device, personalWorks[device.id])))
                 }
-                <Grid key='NewApp' item xs={12}>
-                    <NewApp />
+                <Grid key='NewDevice' item xs={12}>
+                    <NewDevice />
                 </Grid>
             </Grid>
         </MainCard>
@@ -459,4 +457,4 @@ const Subscriptions = () => {
 
 };
 
-export default Subscriptions;
+export default PersonalWorks;

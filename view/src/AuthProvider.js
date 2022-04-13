@@ -22,11 +22,11 @@ function useProvideAuth() {
   const storedClient = localStorage.getItem('authClient');
   const [authClient, setClient] = useState(
     storedClient === 'null' ? null : getAuthClient());
-// TODO  在Dashboard里面刷新后再登出会发生如下报错
-// {
-//   "code": 400,
-//   "message": "userIds 参数有误"
-// }
+  // TODO  在Dashboard里面刷新后再登出会发生如下报错
+  // {
+  //   "code": 400,
+  //   "message": "userIds 参数有误"
+  // }
   useEffect(() => {
     localStorage.setItem('userInfo', JSON.stringify(userInfo));
     localStorage.setItem('authClient', JSON.stringify(authClient));

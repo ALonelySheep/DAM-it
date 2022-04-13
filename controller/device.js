@@ -9,19 +9,21 @@ const pool = new Pool({
 });
 
 //?////////////////////
-//?  POST添加App
+//?  POST添加Device
 //?////////////////////
-exports.addApp = async (req, res) => {
+exports.addDevice = async (req, res) => {
     const { body } = req;
-    // console.log("Add App: body")
+    // console.log(res.locals.user.data.id)
+    // console.log("Add Device: body")
     // console.log(body)
-    const text = `INSERT INTO app 
-    (name, price, monetaryUnit)
-    VALUES ($1,$2,$3) RETURNING *`;
+    const text = `INSERT INTO device 
+    (name, userid, model, storage)
+    VALUES ($1,$2,$3,$4) RETURNING *`;
     const values = [
         body.name,
-        body.price,
-        body.monetaryUnit]
+        res.locals.user.data.id,
+        body.model,
+        body.storage]
     pool.connect((err, client, release) => {
         // console.log("connected: POST APP")
         if (err) {
@@ -44,22 +46,23 @@ exports.addApp = async (req, res) => {
 }
 
 //?////////////////////
-//?  PUT更新App
+//?  PUT更新Device
 //?////////////////////
-exports.updateApp = async (req, res) => {
+exports.updateDevice = async (req, res) => {
     const { body } = req;
-    const text = `UPDATE app 
+    const text = `UPDATE device 
     SET name = $1,
-        price = $2,
-        monetaryUnit = $3
-    WHERE id = $4 RETURNING *`;
+        model = $2,
+        storage = $3
+    WHERE id = $4 AND userid = $5 RETURNING *`;
     const values = [
         body.name,
-        body.price,
-        body.monetaryUnit,
-        body.id]
+        body.model,
+        body.storage,
+        body.id,
+        res.locals.user.data.id]
     pool.connect((err, client, release) => {
-        // console.log("connected: PUT App")
+        // console.log("connected: PUT Device")
         if (err) {
             const errMsg = 'PUT: error acquiring client'
             res.status(500).json(errMsg);
@@ -79,23 +82,23 @@ exports.updateApp = async (req, res) => {
     })
 }
 //?////////////////////
-//?  DELETE删除App
+//?  DELETE删除Device
 //?////////////////////
-exports.deleteApp = async (req, res) => {
-    const text = `DELETE FROM app WHERE id = $1`;
-    const values = [req.params.id]
+exports.deleteDevice = async (req, res) => {
+    const text = `DELETE FROM device WHERE id = $1 AND userid = $2`;
+    const values = [req.params.id, res.locals.user.data.id]
     pool.connect((err, client, release) => {
-        // console.log("DELETE App: connected")
+        // console.log("DELETE Device: connected")
         if (err) {
-            const errMsg = 'DELETE App: Error acquiring client'
+            const errMsg = 'DELETE Device: Error acquiring client'
             res.status(500).json(errMsg);
             return console.error(errMsg, err.stack)
         }
         client.query(text, values, async (err, result) => {
-            // console.log("'DELETE App: query finished")
+            // console.log("'DELETE Device: query finished")
             release()
             if (err) {
-                const errMsg = 'DELETE App: Error executing query'
+                const errMsg = 'DELETE Device: Error executing query'
                 res.status(500).json(errMsg);
                 return console.error(errMsg, err.stack)
             }
@@ -105,35 +108,30 @@ exports.deleteApp = async (req, res) => {
     })
 }
 //?////////////////////
-//?  GET获取App
+//?  GET获取Device
 //?////////////////////
-const formatAppinfo = async (apps) =>
-    apps.map(app => {
-        const id = app.id;
-        const name = app.name;
-        const price = app.price.slice(1, app.price.length);
-        const monetaryUnit = app.monetaryunit;
-        return { id, name, price, monetaryUnit };
-    })
 
-exports.queryAllApps = async (req, res) => {
+exports.queryAllDevices = async (req, res) => {
+    // console.log(res.locals)
+    const text = `SELECT * FROM device
+    WHERE userid = $1
+    ORDER BY id ASC`;
+    const values = [res.locals.user.data.id]
     pool.connect((err, client, release) => {
         if (err) {
             const errMsg = 'Error acquiring client'
             res.status(500).json(errMsg);
             return console.error(errMsg, err.stack)
         }
-        client.query('SELECT * FROM app ORDER BY id ASC', async (err, result) => {
+        client.query(text, values, async (err, result) => {
             release()
             if (err) {
                 const errMsg = 'Error executing query'
                 res.status(500).json(errMsg);
                 return console.error(errMsg, err.stack)
             }
-            // console.log("---------------------APP---------------------")
-            const processedData = await formatAppinfo(result.rows);
-            // console.log(processedData)
-            res.status(200).json(processedData);
+
+            res.status(200).json(result.rows);
         })
     })
 }

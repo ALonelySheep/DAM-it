@@ -18,17 +18,25 @@ const LoginAuth = () => {
     const appId = '623ed2722dbacc824bd2bb0b';
 
     const OnLogin = (userInfo, authClient) => {
+        console.log("Login")
+        console.log(userInfo)
         auth.setUser(userInfo);
         auth.setClient(authClient);
     };
-    // return (
+    const onRegister = (userInfo, authClient) => {
+        console.log("Register")
+        console.log(userInfo)
+        auth.setUser(userInfo);
+        auth.setClient(authClient);
+    }
+
     return (auth.userInfo ? <Navigate to="/dashboard" /> :
         <AuthWrapper1>
             <Grid container direction="column" justifyContent="flex-end" sx={{ minHeight: '100vh' }}>
                 <Grid item xs={12}>
                     <Grid container justifyContent="center" alignItems="center" sx={{ minHeight: 'calc(100vh - 68px)' }}>
                         <Grid item sx={{ m: { xs: 1, sm: 3 }, mb: 0 }}>
-                            <Guard appId={appId} onLogin={OnLogin} />
+                            <Guard appId={appId} onLogin={OnLogin} onRegister={onRegister} />
                         </Grid>
                     </Grid>
                 </Grid>

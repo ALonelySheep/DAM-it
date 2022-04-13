@@ -3,10 +3,9 @@ import { useTheme } from '@mui/material/styles';
 import {
     Box,
     Button,
-    CircularProgress,
-    // Checkbox,
-    // FormControlLabel,
+    Checkbox,
     FormControl,
+    FormControlLabel,
     FormHelperText,
     Grid,
     InputLabel,
@@ -15,24 +14,24 @@ import {
     useMediaQuery,
     MenuItem,
     Select,
+    CircularProgress
 } from '@mui/material';
 
 // third party
 import * as Yup from 'yup';
-import { Formik } from 'formik';
-import { useAuth } from 'AuthProvider'
+import { Formik, Field } from 'formik';
+
 // project imports
-// import useScriptRef from 'hooks/useScriptRef';
 import AnimateButton from 'ui-component/extended/AnimateButton';
+import { addPaidContent, updatePaidContent } from 'api/paidContentAPI';
+import { useAuth } from 'AuthProvider'
 
-import { addApp, updateApp, deleteApp } from 'api/appAPI';
-// ======================|| New App Form ||======================== //
+// ======================|| New PaidContent Form ||======================== //
 
-const AppForm = ({ title, setOpen, setLoading, isDialogClosed, setDialogClosed, isEdit, app }) => {
+const PaidContentForm = ({ title, setOpen, setLoading, isDialogClosed, setDialogClosed, isEdit, paidContent, appid }) => {
     const theme = useTheme();
     // Authentication
     const auth = useAuth();
-    // const scriptedRef = useScriptRef();
     const matchDownSM = useMediaQuery(theme.breakpoints.down('sm'));
     const monetaryUnitList = [
         'CNY', 'USD', 'EUR', 'GBP', 'AUD', 'JPY', 'CAD', 'NZD', 'MOP', 'HKD', 'TWD', 'KRW', 'RUB']
@@ -40,18 +39,15 @@ const AppForm = ({ title, setOpen, setLoading, isDialogClosed, setDialogClosed, 
     const buttonText = isEdit ? 'Update' : 'Add';
 
     if (isEdit) {
-        app.submit = null;
-        app.isDelete = false;
+        paidContent.submit = null;
     }
-    // console.log('isEdit', isEdit)
 
-    const initialValues = isEdit ? app :
+    const initialValues = isEdit ? paidContent :
         {
             name: '',
             price: 0,
             monetaryUnit: 'CNY',
-            submit: null,
-            isDelete: false,
+            submit: null
         }
 
     return (
@@ -73,21 +69,17 @@ const AppForm = ({ title, setOpen, setLoading, isDialogClosed, setDialogClosed, 
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
                     // e.preventDefault();
                     try {
-                        // console.log("Form values");
-                        // console.log(values);
-                        // console.log("is Delete");
-                        // console.log(values.isDelete);
+                        console.log("Form values");
+                        console.log(values);
                         let response;
                         if (isEdit) {
-                            if (values.isDelete)
-                                response = await deleteApp(auth.userInfo.token, values.id);
-                            else
-                                response = await updateApp(auth.userInfo.token, values);
+                            response = await updatePaidContent(auth.userInfo.token,values);
                         } else {
-                            response = await addApp(auth.userInfo.token, values);
+                            values.appid = appid
+                            response = await addPaidContent(auth.userInfo.token,values);
                         }
-                        console.log("response from server")
-                        console.log(response)
+                        // console.log("response from server")
+                        // console.log(response)
                         setOpen(false)
                         setSubmitting(false);
                         setStatus({ success: true });
@@ -101,8 +93,9 @@ const AppForm = ({ title, setOpen, setLoading, isDialogClosed, setDialogClosed, 
                     }
                 }}
             >
-                {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values, setFieldValue }) => (
-                    <form noValidate >
+                {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
+
+                    <form noValidate onSubmit={handleSubmit}>
                         {/* Name */}
                         {/* {console.log(values)} */}
                         <Grid container>
@@ -203,43 +196,17 @@ const AppForm = ({ title, setOpen, setLoading, isDialogClosed, setDialogClosed, 
                                     type="submit"
                                     variant="contained"
                                     color="secondary"
-                                    value="submit"
-                                    onClick={(e) => {
-                                        setFieldValue('isDelete', false)
-                                        handleSubmit(e);
-                                    }}
                                 >
                                     {/* Add */}
                                     {isSubmitting ? <CircularProgress color="inherit" /> : buttonText}
                                 </Button>
                             </AnimateButton>
                         </Box>
-                        {isEdit && <Box sx={{ mt: 2 }}>
-                            <AnimateButton>
-                                <Button
-                                    disableElevation
-                                    disabled={isSubmitting}
-                                    fullWidth
-                                    size="large"
-                                    type="submit"
-                                    variant="contained"
-                                    color="error"
-                                    onClick={(e) => {
-                                        setFieldValue('isDelete', true)
-                                        handleSubmit(e);
-                                    }}
-                                >
-                                    {/* Add */}
-                                    {isSubmitting ? <CircularProgress color="inherit" /> : 'Delete'}
-                                </Button>
-                            </AnimateButton>
-                        </Box>}
                     </form>
-
                 )}
             </Formik>
         </>
     );
 };
 
-export default AppForm;
+export default PaidContentForm;

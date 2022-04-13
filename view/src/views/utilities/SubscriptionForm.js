@@ -22,7 +22,7 @@ import * as Yup from 'yup';
 import { Formik, Field } from 'formik';
 
 // project imports
-import useScriptRef from 'hooks/useScriptRef';
+// import useScriptRef from 'hooks/useScriptRef';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 
 import { LocalizationProvider } from '@mui/lab';
@@ -30,30 +30,34 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { DatePicker } from 'formik-mui-lab';
 
 import { addSubscription, updateSubscription } from 'api/subscriptionAPI';
+import { useAuth } from 'AuthProvider'
 // ======================|| New Subscription Form ||======================== //
 
 const SubscriptionForm = ({ title, setOpen, setLoading, isDialogClosed, setDialogClosed, isEdit, subscription, appid }) => {
     const theme = useTheme();
+    // Authentication
+    const auth = useAuth();
     // const scriptedRef = useScriptRef();
     const matchDownSM = useMediaQuery(theme.breakpoints.down('sm'));
     const monetaryUnitList = [
         'CNY', 'USD', 'EUR', 'GBP', 'AUD', 'JPY', 'CAD', 'NZD', 'MOP', 'HKD', 'TWD', 'KRW', 'RUB']
     const timeUnitList = ['Day', 'Week', 'Month', 'Year']; // 'Quarter'
-
     const buttonText = isEdit ? 'Update' : 'Add';
 
+    let subscriptionData = {}
     if (isEdit) {
         // format subscription for editing
-        subscription.submit = null;
-        const raw = subscription.billingCycleUnit;
+        subscriptionData = { ...subscription };
+        subscriptionData.submit = null;
+        const raw = subscriptionData.billingCycleUnit;
         // ? Capitalize first letter
-        subscription.billingCycleUnit = raw.charAt(0).toUpperCase() + raw.slice(1);
+        subscriptionData.billingCycleUnit = raw.charAt(0).toUpperCase() + raw.slice(1);
         // ? Capitalize first letter & remove 's'
         // subscription.billingCycleUnit = raw.charAt(0).toUpperCase() + raw.slice(1, raw.slice(raw.length - 1, raw.length) === 's' ? raw.length - 1 : raw.length);
     }
-    console.log('isEdit', isEdit)
+    // console.log('isEdit', isEdit)
 
-    const initialValues = isEdit ? subscription :
+    const initialValues = isEdit ? subscriptionData :
         {
             name: '',
             price: 0,
@@ -89,13 +93,13 @@ const SubscriptionForm = ({ title, setOpen, setLoading, isDialogClosed, setDialo
                         console.log(values);
                         let response;
                         if (isEdit) {
-                            response = await updateSubscription(values);
+                            response = await updateSubscription(auth.userInfo.token, values);
                         } else {
                             values.appid = appid
-                            response = await addSubscription(values);
+                            response = await addSubscription(auth.userInfo.token, values);
                         }
-                        console.log("response from server")
-                        console.log(response)
+                        // console.log("response from server")
+                        // console.log(response)
                         setOpen(false)
                         setSubmitting(false);
                         setStatus({ success: true });

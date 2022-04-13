@@ -9,28 +9,30 @@ const pool = new Pool({
 });
 
 //?////////////////////
-//?  POST添加App
+//?  POST添加PaidContent
 //?////////////////////
-exports.addApp = async (req, res) => {
+exports.addPaidContent = async (req, res) => {
     const { body } = req;
-    // console.log("Add App: body")
+    // console.log("body")
     // console.log(body)
-    const text = `INSERT INTO app 
-    (name, price, monetaryUnit)
-    VALUES ($1,$2,$3) RETURNING *`;
+    const text = `INSERT INTO paidcontent 
+    (name,appId,price,monetaryUnit)
+    VALUES ($1,$2,$3,$4) RETURNING *`;
     const values = [
         body.name,
+        body.appid,
         body.price,
         body.monetaryUnit]
+    // console.log(body)
     pool.connect((err, client, release) => {
-        // console.log("connected: POST APP")
+        // console.log("connected: POST PaidContent")
         if (err) {
             const errMsg = 'POST: error acquiring client'
             res.status(500).json(errMsg);
             return console.error(errMsg, err.stack)
         }
         client.query(text, values, async (err, result) => {
-            // console.log("POST: query finished")
+            // console.log("POST: PaidContent query finished")
             release()
             if (err) {
                 const errMsg = 'Error executing query: POST'
@@ -44,58 +46,62 @@ exports.addApp = async (req, res) => {
 }
 
 //?////////////////////
-//?  PUT更新App
+//?  PUT更新PaidContent
 //?////////////////////
-exports.updateApp = async (req, res) => {
+exports.updatePaidContent = async (req, res) => {
     const { body } = req;
-    const text = `UPDATE app 
+    const text = `UPDATE paidcontent 
     SET name = $1,
-        price = $2,
-        monetaryUnit = $3
-    WHERE id = $4 RETURNING *`;
+        appId = $2,
+        price = $3,
+        monetaryUnit = $4
+    WHERE id = $5 RETURNING *`;
     const values = [
         body.name,
+        body.appid,
         body.price,
         body.monetaryUnit,
         body.id]
     pool.connect((err, client, release) => {
-        // console.log("connected: PUT App")
+        // console.log("connected: PUT")
         if (err) {
             const errMsg = 'PUT: error acquiring client'
             res.status(500).json(errMsg);
             return console.error(errMsg, err.stack)
         }
         client.query(text, values, async (err, result) => {
-            // console.log("PUT APP: query finished")
+            // console.log("PUT: query finished")
             release()
             if (err) {
                 const errMsg = 'Error executing query: PUT'
                 res.status(500).json(errMsg);
                 return console.error(errMsg, err.stack)
             }
+            // console.log("PaidContent put response data:")
             // console.log(result.rows)
             res.status(200).json(result.rows);
         })
     })
 }
+
 //?////////////////////
-//?  DELETE删除App
+//?  DELETE删除PaidContent
 //?////////////////////
-exports.deleteApp = async (req, res) => {
-    const text = `DELETE FROM app WHERE id = $1`;
+exports.deletePaidContent = async (req, res) => {
+    const text = `DELETE FROM paidcontent WHERE id = $1`;
     const values = [req.params.id]
     pool.connect((err, client, release) => {
-        // console.log("DELETE App: connected")
+        // console.log("DELETE: connected")
         if (err) {
-            const errMsg = 'DELETE App: Error acquiring client'
+            const errMsg = 'DELETE: Error acquiring client'
             res.status(500).json(errMsg);
             return console.error(errMsg, err.stack)
         }
         client.query(text, values, async (err, result) => {
-            // console.log("'DELETE App: query finished")
+            // console.log("'DELETE: query finished")
             release()
             if (err) {
-                const errMsg = 'DELETE App: Error executing query'
+                const errMsg = 'DELETE: Error executing query'
                 res.status(500).json(errMsg);
                 return console.error(errMsg, err.stack)
             }
@@ -104,36 +110,50 @@ exports.deleteApp = async (req, res) => {
         })
     })
 }
+
+
+
 //?////////////////////
-//?  GET获取App
+//?  GET获取PaidContent
 //?////////////////////
-const formatAppinfo = async (apps) =>
-    apps.map(app => {
-        const id = app.id;
-        const name = app.name;
-        const price = app.price.slice(1, app.price.length);
-        const monetaryUnit = app.monetaryunit;
-        return { id, name, price, monetaryUnit };
+const formatPCInfoForFrontend = async (PC) =>
+    PC.map(sub => {
+        const name = sub.name;
+        const price = sub.price.slice(1, sub.price.length);
+        const monetaryUnit = sub.monetaryunit;
+        const id = sub.id;
+        const appid = sub.appid;
+        // console.log(Object.entries(sub.cycle))
+        return { id, appid, name, price, monetaryUnit };
+
     })
 
-exports.queryAllApps = async (req, res) => {
+
+
+exports.queryAllPaidContents = async (req, res) => {
+    // console.log("connecting")
     pool.connect((err, client, release) => {
+        // console.log("connected")
         if (err) {
             const errMsg = 'Error acquiring client'
             res.status(500).json(errMsg);
             return console.error(errMsg, err.stack)
         }
-        client.query('SELECT * FROM app ORDER BY id ASC', async (err, result) => {
+        client.query('SELECT * FROM paidcontent ORDER BY appid, id ASC', async (err, result) => {
+            // console.log("GET query finished")
             release()
             if (err) {
                 const errMsg = 'Error executing query'
                 res.status(500).json(errMsg);
                 return console.error(errMsg, err.stack)
             }
-            // console.log("---------------------APP---------------------")
-            const processedData = await formatAppinfo(result.rows);
+            // console.log("----------------SUBSCRIPTIONS---------------------")
+            const processedData = await formatPCInfoForFrontend(result.rows);
+            // console.log("processedData")
             // console.log(processedData)
             res.status(200).json(processedData);
         })
     })
 }
+
+

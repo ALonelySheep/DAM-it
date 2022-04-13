@@ -25,31 +25,28 @@ import { useAuth } from 'AuthProvider'
 // import useScriptRef from 'hooks/useScriptRef';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 
-import { addApp, updateApp, deleteApp } from 'api/appAPI';
-// ======================|| New App Form ||======================== //
+import { addDevice, updateDevice, deleteDevice } from 'api/deviceAPI';
+// ======================|| New Device Form ||======================== //
 
-const AppForm = ({ title, setOpen, setLoading, isDialogClosed, setDialogClosed, isEdit, app }) => {
+const DeviceForm = ({ title, setOpen, setLoading, isDialogClosed, setDialogClosed, isEdit, device }) => {
     const theme = useTheme();
-    // Authentication
-    const auth = useAuth();
     // const scriptedRef = useScriptRef();
     const matchDownSM = useMediaQuery(theme.breakpoints.down('sm'));
-    const monetaryUnitList = [
-        'CNY', 'USD', 'EUR', 'GBP', 'AUD', 'JPY', 'CAD', 'NZD', 'MOP', 'HKD', 'TWD', 'KRW', 'RUB']
-
+    // Authentication
+    const auth = useAuth();
     const buttonText = isEdit ? 'Update' : 'Add';
 
     if (isEdit) {
-        app.submit = null;
-        app.isDelete = false;
+        device.submit = null;
+        device.isDelete = false;
     }
     // console.log('isEdit', isEdit)
 
-    const initialValues = isEdit ? app :
+    const initialValues = isEdit ? device :
         {
             name: '',
-            price: 0,
-            monetaryUnit: 'CNY',
+            model: '',
+            storage: 256,
             submit: null,
             isDelete: false,
         }
@@ -66,9 +63,9 @@ const AppForm = ({ title, setOpen, setLoading, isDialogClosed, setDialogClosed, 
             <Formik
                 initialValues={initialValues}
                 validationSchema={Yup.object().shape({
-                    price: Yup.number().min(0, "Price can't be negative").lessThan(10000, "Price can't be that high").required(),
                     name: Yup.string().max(255).required('Name is required'),
-                    monetaryUnit: Yup.string().required('Monetary unit is required'),
+                    storage: Yup.number().min(0, "Storage can't be negative").lessThan(10000, "Price can't be that high").required(),
+                    model: Yup.string().max(40, "Model can't be that long"),
                 })}
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
                     // e.preventDefault();
@@ -80,11 +77,11 @@ const AppForm = ({ title, setOpen, setLoading, isDialogClosed, setDialogClosed, 
                         let response;
                         if (isEdit) {
                             if (values.isDelete)
-                                response = await deleteApp(auth.userInfo.token, values.id);
+                                response = await deleteDevice(auth.userInfo.token, values.id);
                             else
-                                response = await updateApp(auth.userInfo.token, values);
+                                response = await updateDevice(auth.userInfo.token, values);
                         } else {
-                            response = await addApp(auth.userInfo.token, values);
+                            response = await addDevice(auth.userInfo.token, values);
                         }
                         console.log("response from server")
                         console.log(response)
@@ -114,7 +111,7 @@ const AppForm = ({ title, setOpen, setLoading, isDialogClosed, setDialogClosed, 
                                 >
                                     <InputLabel htmlFor="outlined-adornment-name">Name</InputLabel>
                                     <OutlinedInput
-                                        id="outlined-adornment-app-name"
+                                        id="outlined-adornment-device-name"
                                         type="text"
                                         value={values.name ?? ''}
                                         name="name"
@@ -130,60 +127,57 @@ const AppForm = ({ title, setOpen, setLoading, isDialogClosed, setDialogClosed, 
                                 </FormControl>
                             </Grid>
                         </Grid>
-
-                        {/* Price */}
                         <Grid container spacing={matchDownSM ? 0 : 3}>
+                            {/* Model */}
                             <Grid item xs={12} sm={6}>
                                 <FormControl
                                     fullWidth
-                                    error={Boolean(touched.price && errors.price)}
                                     sx={{ ...theme.typography.customInput }}
                                 >
-                                    <InputLabel htmlFor="outlined-adornment-price">Price</InputLabel>
+                                    <InputLabel id="model-select-label">Model</InputLabel>
                                     <OutlinedInput
-                                        id="outlined-adornment-price"
-                                        type="number"
-                                        value={values.price ?? 0}
-                                        name="price"
+                                        id="outlined-adornment-mdoel"
+                                        type="text"
+                                        value={values.model ?? 0}
+                                        name="model"
                                         onBlur={handleBlur}
                                         onChange={handleChange}
                                         inputProps={{}}
                                     />
-                                    {touched.price && errors.price && (
-                                        <FormHelperText error id="standard-weight-helper-text--price">
-                                            {errors.price}
+                                    {touched.model && errors.model && (
+                                        <FormHelperText error id="standard-weight-helper-text--mdoel">
+                                            {errors.model}
                                         </FormHelperText>
                                     )}
                                 </FormControl>
                             </Grid>
-                            {/* Monetary Unit */}
+
+                            {/* Storage */}
+
                             <Grid item xs={12} sm={6}>
                                 <FormControl
                                     fullWidth
-                                    sx={{
-                                        marginTop: 1,
-                                        marginBottom: 1,
-                                        padding: '0 !important',
-                                    }}
+                                    error={Boolean(touched.storage && errors.storage)}
+                                    sx={{ ...theme.typography.customInput }}
                                 >
-                                    <InputLabel id="monetary-unit-select-label">Monetary Unit</InputLabel>
-                                    <Select
-                                        labelId="monetary-unit-select-label"
-                                        id="monetary-unit-select"
-                                        name="monetaryUnit"
-                                        label="Monetary Unit"
-                                        value={values.monetaryUnit ?? ''}
+                                    <InputLabel htmlFor="outlined-adornment-storage">Storage (GB)</InputLabel>
+                                    <OutlinedInput
+                                        id="outlined-adornment-storage"
+                                        type="number"
+                                        value={values.storage ?? 0}
+                                        name="storage"
+                                        onBlur={handleBlur}
                                         onChange={handleChange}
-                                    >
-                                        {monetaryUnitList.map((item) => (
-                                            <MenuItem
-                                                key={item}
-                                                value={item ?? ''}
-                                            >{item}</MenuItem>
-                                        ))}
-                                    </Select>
+                                        inputProps={{}}
+                                    />
+                                    {touched.storage && errors.storage && (
+                                        <FormHelperText error id="standard-weight-helper-text--storage">
+                                            {errors.storage}
+                                        </FormHelperText>
+                                    )}
                                 </FormControl>
                             </Grid>
+
                         </Grid>
 
 
@@ -242,4 +236,4 @@ const AppForm = ({ title, setOpen, setLoading, isDialogClosed, setDialogClosed, 
     );
 };
 
-export default AppForm;
+export default DeviceForm;

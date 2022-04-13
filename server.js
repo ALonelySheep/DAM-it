@@ -7,6 +7,10 @@ require('dotenv').config();
 const testRouter = require('./router/testRouter');
 const subscriptionRouter = require('./router/subscriptionRouter');
 const appRouter = require('./router/appRouter');
+const paidContentRouter = require('./router/paidContentRouter');
+const personalWorkRouter = require('./router/personalWorkRouter');
+const deviceRouter = require('./router/deviceRouter');
+
 
 // Running express server
 const app = express();
@@ -26,9 +30,12 @@ app.use(
   })
 )
 
-app.use('/test',testRouter);
-app.use('/subscription',subscriptionRouter);
-app.use('/app',appRouter);
+app.use('/test', testRouter);
+app.use('/app', appRouter);
+app.use('/subscription', subscriptionRouter);
+app.use('/paid-content', paidContentRouter);
+app.use('/device', deviceRouter);
+app.use('/personal-work', personalWorkRouter);
 
 
 app.listen(port, () => {

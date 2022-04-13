@@ -11,10 +11,13 @@ import {
 // project imports
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import { useState, useEffect } from 'react';
+import { useAuth } from 'AuthProvider'
 // ======================|| New Subscription Form ||======================== //
 
 const DeleteConfirmation = ({ target, setOpen, setLoading, isDialogClosed, setDialogClosed, API }) => {
     // const theme = useTheme();
+    // Authentication
+    const auth = useAuth();
     const [isSubmitting, setSubmitting] = useState(false);
     const [errors, setErrors] = useState({ submit: false });
     const [status, setStatus] = useState({ success: false });
@@ -32,7 +35,7 @@ const DeleteConfirmation = ({ target, setOpen, setLoading, isDialogClosed, setDi
         setSubmitting(true);
         try {
             // console.log(target.id);
-            const response = await API(target.id);
+            const response = await API(auth.userInfo.token, target.id);
             console.log(response)
             setOpen(false)
             setStatus({ success: true });

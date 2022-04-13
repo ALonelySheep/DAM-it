@@ -13,7 +13,9 @@ import Loadable from 'ui-component/Loadable';
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
 
 // utilities routing
-const UtilsSubscriptions = Loadable(lazy(() => import('views/Subscriptions')));
+const Subscriptions = Loadable(lazy(() => import('views/Subscriptions')));
+const PaidContents = Loadable(lazy(() => import('views/PaidContents')));
+const PersonalWorks = Loadable(lazy(() => import('views/PersonalWorks')));
 
 const UtilsTypography = Loadable(lazy(() => import('views/utilities/Typography')));
 const UtilsColor = Loadable(lazy(() => import('views/utilities/Color')));
@@ -25,7 +27,7 @@ const UtilsTablerIcons = Loadable(lazy(() => import('views/utilities/TablerIcons
 const SamplePage = Loadable(lazy(() => import('views/sample-page')));
 const LoginSample = Loadable(lazy(() => import('views/pages/authentication/authentication3/Login3')));
 const RegisterSample = Loadable(lazy(() => import('views/pages/authentication/authentication3/Register3')));
-const SimpleForm = Loadable(lazy(() => import('views/utilities/SubscriptionForm')));
+// const SimpleForm = Loadable(lazy(() => import('views/utilities/SubscriptionForm')));
 
 // const NotFound = Loadable(lazy(() => import('views/NotFound')));
 
@@ -44,8 +46,16 @@ const MainRoutesComponents =
             element: <DashboardDefault />
         },
         {
-            path: '/subscriptions',
-            element: <UtilsSubscriptions />
+            path: '/subscription',
+            element: <Subscriptions />
+        },
+        {
+            path: '/paid-content',
+            element: <PaidContents />
+        },
+        {
+            path: '/personal-work',
+            element: <PersonalWorks />
         },
         {
             path: '/utils/util-typography',
@@ -79,10 +89,7 @@ const MainRoutesComponents =
             path: '/register-sample',
             element: <RegisterSample />
         },
-        {
-            path: '/simpleform',
-            element: <SimpleForm />
-        },
+
     ]
 }
 

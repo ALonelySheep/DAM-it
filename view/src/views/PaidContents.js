@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import { useState, useEffect, lazy } from 'react';
 import { useAuth } from 'AuthProvider'
+
 // project imports
 import SubCard from 'ui-component/cards/SubCard';
 import MainCard from 'ui-component/cards/MainCard';
@@ -21,15 +22,14 @@ import Loadable from 'ui-component/Loadable';
 import { gridSpacing } from 'store/constant';
 
 // API
-import { deleteSubscription, getAllSubscriptions } from 'api/subscriptionAPI';
+import { deletePaidContent, getAllPaidContents } from 'api/paidContentAPI';
 import { getAllApps } from 'api/appAPI';
 
 // =================|| Dialog Components ||================== //
 import DeleteConfirmation from 'views/utilities/DeleteConfirmation';
 
-const SubscriptionForm = Loadable(lazy(() => import('views/utilities/SubscriptionForm')));
+const PaidContentForm = Loadable(lazy(() => import('views/utilities/PaidContentForm')));
 const AppForm = Loadable(lazy(() => import('views/utilities/AppForm')));
-
 
 // =====================|| Auxilary ||======================= //
 const groupBy = (array, key) => array.reduce((result, currentValue) => {
@@ -41,38 +41,36 @@ const groupBy = (array, key) => array.reduce((result, currentValue) => {
     return result;
 }, {}); // empty object is the initial value for result object
 
-const preprocessData = (apps, subs) => {
+const preprocessData = (apps, PC) => {
     // Group Subs by Appid
     // console.log('preprocessing...')
     // console.log(subs);
-    const subsGrouped = groupBy(subs, 'appid');
+    const PCGrouped = groupBy(PC, 'appid');
     for (let i = 0; i < apps.length; i += 1) {
-        if (!subsGrouped[apps[i].id])
-            subsGrouped[apps[i].id] = [];
+        if (!PCGrouped[apps[i].id])
+            PCGrouped[apps[i].id] = [];
     }
-    return subsGrouped;
+    return PCGrouped;
 }
 
 // ==============================|| Main Component ||=============================== //
-//* Haven't figure out how to only rerender the affected components
-//* Page flashes after adding a subscription, which is kinda annoying
-//* Add more color for subscriptions
+//* Same as Subscription.js
 
 
-const Subscriptions = () => {
+const PaidContents = () => {
     // data
     const [apps, setApps] = useState([]);
-    const [subscriptions, setSubscriptions] = useState([]);
+    const [paidContents, setPaidContents] = useState([]);
 
-    let subscriptionsPerApp
+    let paidContentsPerApp
     let appList
-    // Authentication
-    const auth = useAuth();
+
     // display state control
     const [isLoading, setLoading] = useState(true);
     const [isDialogClosed, setDialogClosed] = useState(false);
     const [isDeleteMode, setDeleteMode] = useState(false);
-
+    // Authentication
+    const auth = useAuth();
 
     useEffect(() => {
         let isMounted = true;
@@ -80,26 +78,26 @@ const Subscriptions = () => {
             // console.log('I\'m only supposed to show at first render!');
 
             // Get data from backend
-            subscriptionsPerApp = await getAllSubscriptions(auth.userInfo.token)
             appList = await getAllApps(auth.userInfo.token);
-            console.log("Raw Data From Backend：");
-            console.log(subscriptionsPerApp);
-            console.log(appList);
+            paidContentsPerApp = await getAllPaidContents(auth.userInfo.token)
+            // console.log("Raw Data From Backend：");
+            // console.log(paidContentsPerApp);
+            // console.log(appList);
 
             // preprocess data(Group Subs by Appid)
-            subscriptionsPerApp = preprocessData(appList, subscriptionsPerApp)
+            paidContentsPerApp = preprocessData(appList, paidContentsPerApp)
 
-            console.log("Preprocessed data: ")
-            console.log(subscriptionsPerApp);
-            console.log(appList);
+            // console.log("Preprocessed data: ")
+            // console.log(paidContentsPerApp);
+            // console.log(appList);
 
-            // setSubscriptions(subscriptionsPerApp)
+            // setPaidContents(paidContentsPerApp)
             // setApps(appList)
 
             // store data in state
             if (isMounted) {
                 setApps(prevState => Object.assign(prevState, appList));
-                setSubscriptions(prevState => Object.assign(prevState, subscriptionsPerApp));
+                setPaidContents(prevState => Object.assign(prevState, paidContentsPerApp));
             }
 
             // finish loading
@@ -115,23 +113,23 @@ const Subscriptions = () => {
 
         async function fetchData() {
             if (!isLoading) {
-                subscriptionsPerApp = await getAllSubscriptions(auth.userInfo.token)
                 appList = await getAllApps(auth.userInfo.token)
+                paidContentsPerApp = await getAllPaidContents(auth.userInfo.token)
 
-                subscriptionsPerApp = preprocessData(appList, subscriptionsPerApp)
+                paidContentsPerApp = preprocessData(appList, paidContentsPerApp)
 
-                console.log("Preprocessed data: ")
-                console.log(appList);
-                console.log(subscriptionsPerApp);
+                // console.log("Preprocessed data: ")
+                // console.log(appList);
+                // console.log(paidContentsPerApp);
 
                 if (isMounted) {
                     setApps(appList)
-                    setSubscriptions(subscriptionsPerApp)
+                    setPaidContents(paidContentsPerApp)
                 }
                 // 下面的更新方式会导致显示更新延迟
-                // setSubscriptions(prevState => Object.assign(prevState, subscriptionsPerApp));
+                // setPaidContents(prevState => Object.assign(prevState, paidContentsPerApp));
                 // setApps(prevState => Object.assign(prevState, appList));
-                // setSubscriptions(prevState => ({ ...prevState, ...subscriptionsPerApp }));
+                // setPaidContents(prevState => ({ ...prevState, ...paidContentsPerApp }));
                 // setApps(prevState => ({ ...prevState, ...appList }));
                 setLoading(false);
             }
@@ -141,16 +139,13 @@ const Subscriptions = () => {
     }, [isDialogClosed]);
 
 
-    const SubBox = ({ subscription }) => {
+    const SubBox = ({ paidContent }) => {
         const [open, setOpen] = useState(false);
         const darkColorText = false;
         // Props
-        const { name, price, monetaryUnit, billingCycle, billingCycleUnit } = subscription;
-        // Preprocessing: price, billingCycle, billingCycleUnit
+        const { name, price, monetaryUnit } = paidContent;
+        // Preprocessing: price
         const priceString = (Number(price) === 0) ? 'Free' : `${price} ${monetaryUnit}`;
-        // const billingCycleString = subscription.cycle
-        const tailIndex = billingCycle > 1 ? billingCycleUnit.length : billingCycleUnit.length - 1;
-        const billingCycleString = `${billingCycle} ${billingCycleUnit.charAt(0).toUpperCase() + billingCycleUnit.slice(1, tailIndex)} `;
 
         // Auxilary functions
         const handleClickOpen = () => {
@@ -167,21 +162,20 @@ const Subscriptions = () => {
                 <Dialog
                     // Dialog 调整大小的方式是允许fullwidth再设置maxwidth的大小
                     fullWidth
-                    // fullScreen={fullScreen}
                     maxWidth='sm'
                     open={open}
                     onClose={handleClose}>
                     <DialogContent>
                         {isDeleteMode ?
                             <DeleteConfirmation
-                                target={subscription}
+                                target={paidContent}
                                 setOpen={setOpen}
-                                setLoading={setLoading} setDialogClosed={setDialogClosed} isDialogClosed={isDialogClosed} API={deleteSubscription} /> :
-                            <SubscriptionForm
+                                setLoading={setLoading} setDialogClosed={setDialogClosed} isDialogClosed={isDialogClosed} API={deletePaidContent} /> :
+                            <PaidContentForm
                                 title={name}
                                 setOpen={setOpen}
                                 setLoading={setLoading} setDialogClosed={setDialogClosed} isDialogClosed={isDialogClosed} isEdit
-                                subscription={subscription} />}
+                                paidContent={paidContent} />}
                     </DialogContent>
                 </Dialog>
 
@@ -195,7 +189,7 @@ const Subscriptions = () => {
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 py: 4.5,
-                                bgcolor: "primary.main",
+                                bgcolor: "secondary.main",
                                 // 这个是根据背景色改变字体颜色的, 防止字看不清
                                 color: darkColorText ? 'grey.800' : '#ffffff'
                             }}
@@ -210,16 +204,16 @@ const Subscriptions = () => {
                     </CardActionArea>
                 </Card>
                 {
-                    (priceString || billingCycleString) && (
+                    (priceString) && (
                         <Grid container justifyContent="space-between" alignItems="center">
                             <Grid item>
                                 <Typography variant="subtitle1" sx={{ textTransform: 'uppercase' }}>
                                     {priceString}
                                 </Typography>
                             </Grid>
-                            <Grid item>
+                            {/* <Grid item>
                                 <Typography variant="subtitle2">{billingCycleString}</Typography>
-                            </Grid>
+                            </Grid> */}
                         </Grid>
                     )
                 }
@@ -227,16 +221,13 @@ const Subscriptions = () => {
         )
     };
 
-    const NewSubscription = (props) => {
+    const NewPaidContent = (props) => {
         const { app } = props;
 
-        const newSubTitle = `New Subscription for ${app.name}`;
+        const newPCTitle = `New PaidContent for ${app.name}`;
         const bgcolor = "grey.100"
         const darkColorText = true
         const [open, setOpen] = useState(false);
-
-        // No Cancel button is displayed if use fullscreen
-        // const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
         const handleClickOpen = () => {
             setOpen(true);
@@ -255,8 +246,8 @@ const Subscriptions = () => {
                     open={!isDeleteMode && open}
                     onClose={handleClose}>
                     <DialogContent>
-                        <SubscriptionForm
-                            title={newSubTitle}
+                        <PaidContentForm
+                            title={newPCTitle}
                             setOpen={setOpen}
                             setLoading={setLoading}
                             setDialogClosed={setDialogClosed}
@@ -373,7 +364,7 @@ const Subscriptions = () => {
     );
 
     const EditAppButton = ({ title, icon, app }) => {
-        const dialogTitle = title || `New App`;
+        const dialogTitle = `New App`;
         const [open, setOpen] = useState(false);
 
         const handleClickOpen = () => {
@@ -409,24 +400,24 @@ const Subscriptions = () => {
     }
 
 
-    const makeGridForSub = (subscription) => (
-        <Grid key={`${subscription.name}-${subscription.id}-${subscription.startDate}`} item xs={12} sm={6} md={4} lg={3}>
+    const makeGridForSub = (paidContent) => (
+        <Grid key={paidContent.id} item xs={12} sm={6} md={4} lg={3}>
             {/* 上面的xs等等都是Breakpoints, 意思是在不同的情况下,一个box占的屏幕比例是不一样的 比如在小屏幕时, 一个box会占满整个屏幕, 而在大屏幕的的时候, 一个box只占用屏幕的2/12=六分之一 */}
             <SubBox
-                // {...subscription}
-                subscription={subscription}
-                key={`${subscription.name}-${subscription.id}-${subscription.startDate}`}
+                // {...paidContent}
+                paidContent={paidContent}
+                key={paidContent.id}
             />
         </Grid>
     )
 
-    const makeGridForApp = (app, subscriptions) => (
+    const makeGridForApp = (app, paidContents) => (
         <Grid key={app.id} item xs={12}>
-            <SubCard key={app.id} title={app.name} secondary={<EditAppButton app={app} title={`Edit ${app.name}`} icon={<IconEdit />} />}>
+            <SubCard key={app.id} title={app.name} secondary={<EditAppButton app={app} title='Edit this app' icon={<IconEdit />} />}>
                 <Grid key={app.id} container spacing={gridSpacing}>
-                    {subscriptions.map(makeGridForSub)}
+                    {paidContents.map(makeGridForSub)}
                     <Grid key="New" item xs={12} sm={6} md={4} lg={3}>
-                        <NewSubscription app={app} />
+                        <NewPaidContent app={app} />
                     </Grid>
                 </Grid>
             </SubCard>
@@ -443,12 +434,12 @@ const Subscriptions = () => {
         </MainCard>
     ) : (
         <MainCard
-            title="Subscriptions"
-            secondary={<DeleteModeButton title='Delete Subscriptions' icon={<IconTrash />} />}
+            title="PaidContents"
+            secondary={<DeleteModeButton title='Delete PaidContents' icon={<IconTrash />} />}
         >
             <Grid container spacing={gridSpacing}>
                 {
-                    apps.map((app) => (makeGridForApp(app, subscriptions[app.id])))
+                    apps.map((app) => (makeGridForApp(app, paidContents[app.id])))
                 }
                 <Grid key='NewApp' item xs={12}>
                     <NewApp />
@@ -459,4 +450,4 @@ const Subscriptions = () => {
 
 };
 
-export default Subscriptions;
+export default PaidContents;

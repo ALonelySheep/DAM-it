@@ -1,5 +1,5 @@
 // assets
-import { IconTypography, IconPalette, IconShadow, IconWindmill, IconRss} from '@tabler/icons';
+import { IconTypography, IconPalette, IconShadow, IconWindmill,  IconBrush } from '@tabler/icons';
 
 // constant
 const icons = {
@@ -7,22 +7,24 @@ const icons = {
     IconPalette,
     IconShadow,
     IconWindmill,
-    IconRss
+
+    IconBrush
 };
 
-// ==============================|| UTILITIES MENU ITEMS ||============================== //
+// ==============================|| Creations MENU ITEMS ||============================== //
 
-const utilities = {
-    id: 'utilities',
-    title: 'Utilities',
+const creations = {
+    id: 'creations',
+    title: 'Creations',
     type: 'group',
     children: [
+        
         {
-            id: 'subscriptions',
-            title: 'Subscriptions',
+            id: 'personal-works',
+            title: 'Personal Works',
             type: 'item',
-            url: '/subscriptions',
-            icon: icons.IconRss,
+            url: '/personal-work',
+            icon: icons.IconBrush,
             breadcrumbs: false
         },
         {
@@ -71,15 +73,7 @@ const utilities = {
                 }
             ]
         },
-        {
-            id: 'util-test',
-            title: 'Form',
-            type: 'item',
-            url: '/simpleform',
-            icon: icons.IconShadow,
-            breadcrumbs: false
-        }
     ]
 };
 
-export default utilities;
+export default creations;
