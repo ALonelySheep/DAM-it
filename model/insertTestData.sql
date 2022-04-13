@@ -331,28 +331,28 @@ VALUES
   ('623f144c66c804651a311f54',17,'true','Oct 14, 2022','Money');
 INSERT INTO installation (userId, appId, ifUninstalled, date)
 VALUES
-  ('623f144c66c804651a311f54',11,'false','Aug 26, 2022'),
-  ('623f144c66c804651a311f54',16,'true','Dec 21, 2021'),
-  ('623f144c66c804651a311f54',13,'false','Dec 23, 2020'),
-  ('623f144c66c804651a311f54',7,'false','Jul 1, 2021'),
-  ('623f144c66c804651a311f54',3,'true','Mar 19, 2022'),
-  ('623f144c66c804651a311f54',18,'true','Jun 29, 2021'),
-  ('623f144c66c804651a311f54',16,'false','Dec 31, 2021'),
-  ('623f144c66c804651a311f54',16,'false','Oct 9, 2022'),
-  ('623f144c66c804651a311f54',16,'true','Sep 29, 2020'),
-  ('623f144c66c804651a311f54',7,'true','Sep 23, 2021');
+  ('62556bea115616412127d595',11,'false','Aug 26, 2022'),
+  ('62556bea115616412127d595',16,'true','Dec 21, 2021'),
+  ('62556bea115616412127d595',13,'false','Dec 23, 2020'),
+  ('62556bea115616412127d595',7,'false','Jul 1, 2021'),
+  ('62556bea115616412127d595',3,'true','Mar 19, 2022'),
+  ('62556bea115616412127d595',18,'true','Jun 29, 2021'),
+  ('62556bea115616412127d595',16,'false','Dec 31, 2021'),
+  ('62556bea115616412127d595',16,'false','Oct 9, 2022'),
+  ('62556bea115616412127d595',16,'true','Sep 29, 2020'),
+  ('62556bea115616412127d595',7,'true','Sep 23, 2021');
 INSERT INTO installation (userId, appId, ifUninstalled, date)
 VALUES
-  ('623f144c66c804651a311f54',15,'false','Jul 31, 2020'),
-  ('623f144c66c804651a311f54',3,'true','May 24, 2021'),
-  ('623f144c66c804651a311f54',18,'true','Jan 7, 2022'),
-  ('623f144c66c804651a311f54',7,'true','May 7, 2022'),
-  ('623f144c66c804651a311f54',15,'false','Feb 6, 2021'),
-  ('623f144c66c804651a311f54',6,'true','Apr 3, 2021'),
-  ('623f144c66c804651a311f54',10,'true','Dec 8, 2022'),
-  ('623f144c66c804651a311f54',8,'true','Jun 29, 2020'),
-  ('623f144c66c804651a311f54',19,'false','Mar 7, 2022'),
-  ('623f144c66c804651a311f54',15,'false','Aug 19, 2021');
+  ('62556bea115616412127d595',15,'false','Jul 31, 2020'),
+  ('62556bea115616412127d595',3,'true','May 24, 2021'),
+  ('62556bea115616412127d595',18,'true','Jan 7, 2022'),
+  ('62556bea115616412127d595',7,'true','May 7, 2022'),
+  ('62556bea115616412127d595',15,'false','Feb 6, 2021'),
+  ('62556bea115616412127d595',6,'true','Apr 3, 2021'),
+  ('62556bea115616412127d595',10,'true','Dec 8, 2022'),
+  ('62556bea115616412127d595',8,'true','Jun 29, 2020'),
+  ('62556bea115616412127d595',19,'false','Mar 7, 2022'),
+  ('62556bea115616412127d595',15,'false','Aug 19, 2021');
 
 -- -- ! renewal 70 -----------------------------------
 --INSERT INTO renewal (userId,subscriptionId,startDate,numberOfRenewal,reminder,category)
@@ -454,80 +454,80 @@ VALUES
   ('623f144c66c804651a311f54',19,'Jan 1, 2023','10 year','Art'),
   ('623f144c66c804651a311f54',14,'Dec 6, 2021','7 day','Efficiency'),
   ('623f144c66c804651a311f54',5,'Dec 25, 2020','11 week','Money'),
-  ('623f144c66c804651a311f54',9,'May 25, 2022','11 day','Money'),
-  ('623f144c66c804651a311f54',5,'Feb 27, 2020','10 day','scifi');
+  ('623f144c66c804651a311f54',8,'May 25, 2022','11 day','Money'),
+  ('623f144c66c804651a311f54',1,'Feb 27, 2020','10 day','scifi');
 INSERT INTO purchase (userId, paidContentId, date, timeLimit, category)
 VALUES
   ('623f144c66c804651a311f54',24,'Feb 8, 2020','9 year','Self'),
-  ('623f144c66c804651a311f54',15,'Mar 16, 2022','6 year','Efficiency'),
-  ('623f144c66c804651a311f54',20,'Oct 8, 2022','3 day','fun'),
-  ('623f144c66c804651a311f54',35,'Sep 27, 2019','3 month','scifi'),
+  ('623f144c66c804651a311f54',16,'Mar 16, 2022','6 year','Efficiency'),
+  ('623f144c66c804651a311f54',21,'Oct 8, 2022','3 day','fun'),
+  ('623f144c66c804651a311f54',34,'Sep 27, 2019','3 month','scifi'),
   ('623f144c66c804651a311f54',4,'Jan 12, 2023','7 day','Self'),
-  ('623f144c66c804651a311f54',1,'Aug 19, 2019','8 year','boring'),
-  ('623f144c66c804651a311f54',20,'Apr 4, 2021','1 day','fun'),
-  ('623f144c66c804651a311f54',24,'Mar 27, 2020','6 day','Efficiency'),
-  ('623f144c66c804651a311f54',24,'Sep 1, 2022','1 week','fun'),
+  ('623f144c66c804651a311f54',2,'Aug 19, 2019','8 year','boring'),
+  ('623f144c66c804651a311f54',22,'Apr 4, 2021','1 day','fun'),
+  ('623f144c66c804651a311f54',23,'Mar 27, 2020','6 day','Efficiency'),
+  ('623f144c66c804651a311f54',26,'Sep 1, 2022','1 week','fun'),
   ('623f144c66c804651a311f54',37,'Mar 16, 2020','2 week','Efficiency');
-INSERT INTO purchase (userId, paidContentId, date, timeLimit, category)
-VALUES
-  ('623f144c66c804651a311f54',16,'Jul 12, 2022','12 week','boring'),
-  ('623f144c66c804651a311f54',12,'Aug 4, 2020','6 year','Money'),
-  ('623f144c66c804651a311f54',8,'Jul 15, 2022','2 month','Self'),
-  ('623f144c66c804651a311f54',11,'Jan 22, 2022','5 day','fun'),
-  ('623f144c66c804651a311f54',18,'Dec 27, 2020','6 week','fun'),
-  ('623f144c66c804651a311f54',33,'May 28, 2020','4 day','fun'),
-  ('623f144c66c804651a311f54',4,'Feb 15, 2020','8 day','fun'),
-  ('623f144c66c804651a311f54',27,'Apr 19, 2021','5 day','Money'),
-  ('623f144c66c804651a311f54',17,'Feb 10, 2023','6 year','Self'),
-  ('623f144c66c804651a311f54',8,'Sep 4, 2020','1 week','Money');
-INSERT INTO purchase (userId, paidContentId, date, timeLimit, category)
-VALUES
-  ('623f144c66c804651a311f54',36,'Jan 22, 2023','7 year','Art'),
-  ('623f144c66c804651a311f54',30,'Sep 11, 2021','4 year','Self'),
-  ('623f144c66c804651a311f54',9,'Jun 10, 2022','10 day','Self'),
-  ('623f144c66c804651a311f54',9,'Mar 8, 2020','11 month','Efficiency'),
-  ('623f144c66c804651a311f54',16,'Oct 13, 2020','9 year','Self'),
-  ('623f144c66c804651a311f54',6,'Mar 18, 2022','12 week','scifi'),
-  ('623f144c66c804651a311f54',17,'Jan 28, 2021','9 year','Art'),
-  ('623f144c66c804651a311f54',36,'Dec 7, 2022','12 day','Money'),
-  ('623f144c66c804651a311f54',5,'Apr 15, 2022','10 week','Money'),
-  ('623f144c66c804651a311f54',19,'Oct 12, 2020','9 day','fun');
-INSERT INTO purchase (userId, paidContentId, date, timeLimit, category)
-VALUES
-  ('623f144c66c804651a311f54',16,'Mar 4, 2020','4 week','Self'),
-  ('623f144c66c804651a311f54',34,'Jun 15, 2022','7 year','fun'),
-  ('623f144c66c804651a311f54',29,'Jan 14, 2020','4 day','scifi'),
-  ('623f144c66c804651a311f54',13,'Feb 4, 2022','3 month','Money'),
-  ('623f144c66c804651a311f54',20,'Nov 18, 2021','9 week','scifi'),
-  ('623f144c66c804651a311f54',4,'Jan 12, 2023','4 day','Self'),
-  ('623f144c66c804651a311f54',33,'Mar 5, 2020','7 day','scifi'),
-  ('623f144c66c804651a311f54',32,'Aug 11, 2020','6 day','Self'),
-  ('623f144c66c804651a311f54',1,'Feb 29, 2020','9 day','scifi'),
-  ('623f144c66c804651a311f54',22,'Jun 10, 2022','8 year','Efficiency');
-INSERT INTO purchase (userId, paidContentId, date, timeLimit)
-VALUES
-  ('623f144c66c804651a311f54',31,'Dec 18, 2019','9 month'),
-  ('623f144c66c804651a311f54',15,'Jan 25, 2021','9 year'),
-  ('623f144c66c804651a311f54',3,'Feb 22, 2023','6 day'),
-  ('623f144c66c804651a311f54',30,'Dec 2, 2019','5 month'),
-  ('623f144c66c804651a311f54',25,'Sep 21, 2022','7 day'),
-  ('623f144c66c804651a311f54',2,'Jun 6, 2022','9 day'),
-  ('623f144c66c804651a311f54',11,'Sep 20, 2022','6 day'),
-  ('623f144c66c804651a311f54',34,'Sep 24, 2022','6 week'),
-  ('623f144c66c804651a311f54',9,'Sep 19, 2021','10 month'),
-  ('623f144c66c804651a311f54',12,'Sep 26, 2021','5 year');
-INSERT INTO purchase (userId, paidContentId, date, timeLimit)
-VALUES
-  ('623f144c66c804651a311f54',19,'Feb 20, 2022','9 year'),
-  ('623f144c66c804651a311f54',27,'Oct 20, 2019','8 day'),
-  ('623f144c66c804651a311f54',27,'Mar 29, 2021','8 year'),
-  ('623f144c66c804651a311f54',22,'May 17, 2021','5 day'),
-  ('623f144c66c804651a311f54',13,'Jun 20, 2021','9 year'),
-  ('623f144c66c804651a311f54',9,'Nov 1, 2019','10 week'),
-  ('623f144c66c804651a311f54',29,'Dec 27, 2021','6 year'),
-  ('623f144c66c804651a311f54',9,'Dec 6, 2022','9 day'),
-  ('623f144c66c804651a311f54',17,'Nov 27, 2020','2 year'),
-  ('623f144c66c804651a311f54',33,'Jul 30, 2020','8 year');
+-- INSERT INTO purchase (userId, paidContentId, date, timeLimit, category)
+-- VALUES
+--   ('623f144c66c804651a311f54',16,'Jul 12, 2022','12 week','boring'),
+--   ('623f144c66c804651a311f54',12,'Aug 4, 2020','6 year','Money'),
+--   ('623f144c66c804651a311f54',8,'Jul 15, 2022','2 month','Self'),
+--   ('623f144c66c804651a311f54',11,'Jan 22, 2022','5 day','fun'),
+--   ('623f144c66c804651a311f54',18,'Dec 27, 2020','6 week','fun'),
+--   ('623f144c66c804651a311f54',33,'May 28, 2020','4 day','fun'),
+--   ('623f144c66c804651a311f54',4,'Feb 15, 2020','8 day','fun'),
+--   ('623f144c66c804651a311f54',27,'Apr 19, 2021','5 day','Money'),
+--   ('623f144c66c804651a311f54',17,'Feb 10, 2023','6 year','Self'),
+--   ('623f144c66c804651a311f54',8,'Sep 4, 2020','1 week','Money');
+-- INSERT INTO purchase (userId, paidContentId, date, timeLimit, category)
+-- VALUES
+--   ('623f144c66c804651a311f54',36,'Jan 22, 2023','7 year','Art'),
+--   ('623f144c66c804651a311f54',30,'Sep 11, 2021','4 year','Self'),
+--   ('623f144c66c804651a311f54',9,'Jun 10, 2022','10 day','Self'),
+--   ('623f144c66c804651a311f54',9,'Mar 8, 2020','11 month','Efficiency'),
+--   ('623f144c66c804651a311f54',16,'Oct 13, 2020','9 year','Self'),
+--   ('623f144c66c804651a311f54',6,'Mar 18, 2022','12 week','scifi'),
+--   ('623f144c66c804651a311f54',17,'Jan 28, 2021','9 year','Art'),
+--   ('623f144c66c804651a311f54',36,'Dec 7, 2022','12 day','Money'),
+--   ('623f144c66c804651a311f54',5,'Apr 15, 2022','10 week','Money'),
+--   ('623f144c66c804651a311f54',19,'Oct 12, 2020','9 day','fun');
+-- INSERT INTO purchase (userId, paidContentId, date, timeLimit, category)
+-- VALUES
+--   ('623f144c66c804651a311f54',16,'Mar 4, 2020','4 week','Self'),
+--   ('623f144c66c804651a311f54',34,'Jun 15, 2022','7 year','fun'),
+--   ('623f144c66c804651a311f54',29,'Jan 14, 2020','4 day','scifi'),
+--   ('623f144c66c804651a311f54',13,'Feb 4, 2022','3 month','Money'),
+--   ('623f144c66c804651a311f54',20,'Nov 18, 2021','9 week','scifi'),
+--   ('623f144c66c804651a311f54',4,'Jan 12, 2023','4 day','Self'),
+--   ('623f144c66c804651a311f54',33,'Mar 5, 2020','7 day','scifi'),
+--   ('623f144c66c804651a311f54',32,'Aug 11, 2020','6 day','Self'),
+--   ('623f144c66c804651a311f54',1,'Feb 29, 2020','9 day','scifi'),
+--   ('623f144c66c804651a311f54',22,'Jun 10, 2022','8 year','Efficiency');
+-- INSERT INTO purchase (userId, paidContentId, date, timeLimit)
+-- VALUES
+--   ('623f144c66c804651a311f54',31,'Dec 18, 2019','9 month'),
+--   ('623f144c66c804651a311f54',15,'Jan 25, 2021','9 year'),
+--   ('623f144c66c804651a311f54',3,'Feb 22, 2023','6 day'),
+--   ('623f144c66c804651a311f54',30,'Dec 2, 2019','5 month'),
+--   ('623f144c66c804651a311f54',25,'Sep 21, 2022','7 day'),
+--   ('623f144c66c804651a311f54',2,'Jun 6, 2022','9 day'),
+--   ('623f144c66c804651a311f54',11,'Sep 20, 2022','6 day'),
+--   ('623f144c66c804651a311f54',34,'Sep 24, 2022','6 week'),
+--   ('623f144c66c804651a311f54',9,'Sep 19, 2021','10 month'),
+--   ('623f144c66c804651a311f54',12,'Sep 26, 2021','5 year');
+-- INSERT INTO purchase (userId, paidContentId, date, timeLimit)
+-- VALUES
+--   ('623f144c66c804651a311f54',19,'Feb 20, 2022','9 year'),
+--   ('623f144c66c804651a311f54',27,'Oct 20, 2019','8 day'),
+--   ('623f144c66c804651a311f54',27,'Mar 29, 2021','8 year'),
+--   ('623f144c66c804651a311f54',22,'May 17, 2021','5 day'),
+--   ('623f144c66c804651a311f54',13,'Jun 20, 2021','9 year'),
+--   ('623f144c66c804651a311f54',9,'Nov 1, 2019','10 week'),
+--   ('623f144c66c804651a311f54',29,'Dec 27, 2021','6 year'),
+--   ('623f144c66c804651a311f54',9,'Dec 6, 2022','9 day'),
+--   ('623f144c66c804651a311f54',17,'Nov 27, 2020','2 year'),
+--   ('623f144c66c804651a311f54',33,'Jul 30, 2020','8 year');
 
 -- -- ! 80 device ------------------ 
 

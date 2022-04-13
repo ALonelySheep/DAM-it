@@ -47,8 +47,8 @@ const preprocessData = (apps, subs) => {
     // console.log(subs);
     const subsGrouped = groupBy(subs, 'appid');
     for (let i = 0; i < apps.length; i += 1) {
-        if (!subsGrouped[apps[i].id])
-            subsGrouped[apps[i].id] = [];
+        if (!subsGrouped[apps[i].appId])
+            subsGrouped[apps[i].appId] = [];
     }
     return subsGrouped;
 }
@@ -262,7 +262,7 @@ const Subscriptions = () => {
                             setDialogClosed={setDialogClosed}
                             isDialogClosed={isDialogClosed}
                             isEdit={false}
-                            appid={app.id} />
+                            appid={app.appId} />
                     </DialogContent>
                 </Dialog>
 
@@ -421,9 +421,9 @@ const Subscriptions = () => {
     )
 
     const makeGridForApp = (app, subscriptions) => (
-        <Grid key={app.id} item xs={12}>
-            <SubCard key={app.id} title={app.name} secondary={<EditAppButton app={app} title={`Edit ${app.name}`} icon={<IconEdit />} />}>
-                <Grid key={app.id} container spacing={gridSpacing}>
+        <Grid key={`${app.id}-${app.date}`} item xs={12}>
+            <SubCard key={`${app.id}-${app.date}`} title={app.name} secondary={<EditAppButton app={app} title={`Edit ${app.name}`} icon={<IconEdit />} />}>
+                <Grid key={`${app.id}-${app.date}`} container spacing={gridSpacing}>
                     {subscriptions.map(makeGridForSub)}
                     <Grid key="New" item xs={12} sm={6} md={4} lg={3}>
                         <NewSubscription app={app} />
@@ -448,7 +448,7 @@ const Subscriptions = () => {
         >
             <Grid container spacing={gridSpacing}>
                 {
-                    apps.map((app) => (makeGridForApp(app, subscriptions[app.id])))
+                    apps.map((app) => (makeGridForApp(app, subscriptions[app.appId])))
                 }
                 <Grid key='NewApp' item xs={12}>
                     <NewApp />

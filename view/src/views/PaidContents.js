@@ -47,8 +47,8 @@ const preprocessData = (apps, PC) => {
     // console.log(subs);
     const PCGrouped = groupBy(PC, 'appid');
     for (let i = 0; i < apps.length; i += 1) {
-        if (!PCGrouped[apps[i].id])
-            PCGrouped[apps[i].id] = [];
+        if (!PCGrouped[apps[i].appId])
+            PCGrouped[apps[i].appId] = [];
     }
     return PCGrouped;
 }
@@ -80,16 +80,16 @@ const PaidContents = () => {
             // Get data from backend
             appList = await getAllApps(auth.userInfo.token);
             paidContentsPerApp = await getAllPaidContents(auth.userInfo.token)
-            // console.log("Raw Data From Backend：");
-            // console.log(paidContentsPerApp);
-            // console.log(appList);
+            console.log("Raw Data From Backend：");
+            console.log(paidContentsPerApp);
+            console.log(appList);
 
             // preprocess data(Group Subs by Appid)
             paidContentsPerApp = preprocessData(appList, paidContentsPerApp)
 
-            // console.log("Preprocessed data: ")
-            // console.log(paidContentsPerApp);
-            // console.log(appList);
+            console.log("Preprocessed data: ")
+            console.log(paidContentsPerApp);
+            console.log(appList);
 
             // setPaidContents(paidContentsPerApp)
             // setApps(appList)
@@ -118,9 +118,9 @@ const PaidContents = () => {
 
                 paidContentsPerApp = preprocessData(appList, paidContentsPerApp)
 
-                // console.log("Preprocessed data: ")
-                // console.log(appList);
-                // console.log(paidContentsPerApp);
+                console.log("Preprocessed data: ")
+                console.log(appList);
+                console.log(paidContentsPerApp);
 
                 if (isMounted) {
                     setApps(appList)
@@ -253,7 +253,7 @@ const PaidContents = () => {
                             setDialogClosed={setDialogClosed}
                             isDialogClosed={isDialogClosed}
                             isEdit={false}
-                            appid={app.id} />
+                            appid={app.appId} />
                     </DialogContent>
                 </Dialog>
 
@@ -364,7 +364,7 @@ const PaidContents = () => {
     );
 
     const EditAppButton = ({ title, icon, app }) => {
-        const dialogTitle = `New App`;
+        const dialogTitle = title||`New App`;
         const [open, setOpen] = useState(false);
 
         const handleClickOpen = () => {
@@ -401,20 +401,20 @@ const PaidContents = () => {
 
 
     const makeGridForSub = (paidContent) => (
-        <Grid key={paidContent.id} item xs={12} sm={6} md={4} lg={3}>
+        <Grid key={`${paidContent.id}-${paidContent.name}`} item xs={12} sm={6} md={4} lg={3}>
             {/* 上面的xs等等都是Breakpoints, 意思是在不同的情况下,一个box占的屏幕比例是不一样的 比如在小屏幕时, 一个box会占满整个屏幕, 而在大屏幕的的时候, 一个box只占用屏幕的2/12=六分之一 */}
             <SubBox
                 // {...paidContent}
                 paidContent={paidContent}
-                key={paidContent.id}
+                key={`${paidContent.id}-${paidContent.name}`}
             />
         </Grid>
     )
 
     const makeGridForApp = (app, paidContents) => (
-        <Grid key={app.id} item xs={12}>
-            <SubCard key={app.id} title={app.name} secondary={<EditAppButton app={app} title='Edit this app' icon={<IconEdit />} />}>
-                <Grid key={app.id} container spacing={gridSpacing}>
+        <Grid key={`${app.id}-${app.date}`} item xs={12}>
+            <SubCard key={`${app.id}-${app.date}`} title={app.name} secondary={<EditAppButton app={app} title={`Edit ${app.name}`} icon={<IconEdit />} />}>
+                <Grid key={`${app.id}-${app.date}`} container spacing={gridSpacing}>
                     {paidContents.map(makeGridForSub)}
                     <Grid key="New" item xs={12} sm={6} md={4} lg={3}>
                         <NewPaidContent app={app} />
@@ -439,7 +439,7 @@ const PaidContents = () => {
         >
             <Grid container spacing={gridSpacing}>
                 {
-                    apps.map((app) => (makeGridForApp(app, paidContents[app.id])))
+                    apps.map((app) => (makeGridForApp(app, paidContents[app.appId])))
                 }
                 <Grid key='NewApp' item xs={12}>
                     <NewApp />

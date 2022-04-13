@@ -31,8 +31,8 @@ export const addPaidContent = async (userToken, paidContent) => {
 export const updatePaidContent = async (userToken, paidContent) => {
     // paidContent.cycle = `${paidContent.billingCycle} ${paidContent.billingCycleUnit}`;
     delete paidContent.submit;
-    // console.log("PUT paidContent Data:");
-    // console.log(paidContent);
+    console.log("PUT paidContent Data:");
+    console.log(paidContent);
     const response = await fetch(`${API_ENDPOINT}/paid-content/${paidContent.id}`, {
         method: "PUT",
         body: JSON.stringify(paidContent),

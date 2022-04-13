@@ -16,6 +16,15 @@ CREATE TABLE app(
     monetaryUnit    varchar(10)     DEFAULT 'CNY'       NOT NULL
 );
 
+CREATE TABLE installation(
+    id              SERIAL          PRIMARY KEY,
+    userId          varchar(30)     REFERENCES userAccount(id) ,
+    appId           SERIAL          REFERENCES app(id) ON DELETE CASCADE,
+    ifUninstalled   BOOLEAN         DEFAULT false,
+    date            DATE            DEFAULT now(),
+    category        varchar(20) 	     
+);
+
 CREATE TABLE subscription(
     id              SERIAL          PRIMARY KEY,
     name            varchar(40)     NOT NULL,
@@ -27,7 +36,7 @@ CREATE TABLE subscription(
 );
 
 CREATE TABLE renewal(
-    Id              SERIAL          PRIMARY KEY,
+    id              SERIAL          PRIMARY KEY,
     userId          varchar(30)     REFERENCES userAccount(id) ,
     subscriptionId  SERIAL          REFERENCES subscription(id) ON DELETE CASCADE,
     numberOfRenewal INTEGER         DEFAULT 0,
@@ -45,15 +54,9 @@ CREATE TABLE paidContent(
     monetaryUnit    varchar(10)     DEFAULT 'CNY'       NOT NULL
 );
 
-CREATE TABLE installation(
-    userId          varchar(30)          REFERENCES userAccount(id) ,
-    appId           SERIAL          REFERENCES app(id) ON DELETE CASCADE,
-    ifUninstalled   BOOLEAN         DEFAULT false,
-    date            DATE            DEFAULT now(),
-    category        varchar(20) 	     
-);
 
 CREATE TABLE purchase(
+    id              SERIAL         PRIMARY KEY,
     userId          varchar(30)    REFERENCES userAccount(id) ,
     paidContentId  SERIAL          REFERENCES paidContent(id) ON DELETE CASCADE,
     date            DATE           DEFAULT now() ,
@@ -91,6 +94,35 @@ BEGIN
 END
 $func$
 LANGUAGE plpgsql;
+
+-- 输入App的信息, 返回对应的App的id, 如果不存在则自动创建
+CREATE OR REPLACE FUNCTION getAppId(varchar(40),money,varchar(10)) RETURNS TABLE (AppId integer) AS
+$func$ 
+BEGIN
+    RETURN QUERY SELECT id FROM app WHERE name = $1 AND price = $2 AND monetaryUnit = $3;
+    IF NOT FOUND THEN
+        RETURN QUERY 
+            INSERT INTO app (name,price,monetaryUnit) 
+            VALUES ($1,$2,$3) ON CONFLICT DO NOTHING RETURNING id;
+    END IF;
+END
+$func$
+LANGUAGE plpgsql;
+
+-- 输入PaidContent的信息, 返回对应的PaidContent的id, 如果不存在则自动创建
+CREATE OR REPLACE FUNCTION getPCId(varchar(40),integer,money,varchar(10)) RETURNS TABLE (PCId integer) AS
+$func$ 
+BEGIN
+    RETURN QUERY SELECT id FROM paidcontent WHERE name = $1 AND appid = $2 AND price = $3 AND monetaryUnit = $4;
+    IF NOT FOUND THEN
+        RETURN QUERY 
+            INSERT INTO paidcontent (name,appid,price,monetaryUnit) 
+            VALUES ($1,$2,$3,$4) ON CONFLICT DO NOTHING RETURNING id;
+    END IF;
+END
+$func$
+LANGUAGE plpgsql;
+
 
 COMMIT;
 

@@ -371,7 +371,7 @@ const PersonalWorks = () => {
     );
 
     const EditDeviceButton = ({ title, icon, device }) => {
-        const dialogTitle = `New Device`;
+        const dialogTitle = title || `New Device`;
         const [open, setOpen] = useState(false);
 
         const handleClickOpen = () => {
@@ -420,7 +420,7 @@ const PersonalWorks = () => {
 
     const makeGridForDevice = (device, personalWorks) => (
         <Grid key={device.id} item xs={12}>
-            <SubCard key={device.id} title={device.name} secondary={<EditDeviceButton device={device} title='Edit this device' icon={<IconEdit />} />}>
+            <SubCard key={device.id} title={device.name} secondary={<EditDeviceButton device={device} title={`Edit ${device.name}`} icon={<IconEdit />} />}>
                 <Grid key={device.id} container spacing={gridSpacing}>
                     {personalWorks.map(makeGridForSub)}
                     <Grid key="New" item xs={12} sm={6} md={4}>

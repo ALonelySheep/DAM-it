@@ -15,15 +15,24 @@ exports.addPaidContent = async (req, res) => {
     const { body } = req;
     // console.log("body")
     // console.log(body)
-    const text = `INSERT INTO paidcontent 
-    (name,appId,price,monetaryUnit)
-    VALUES ($1,$2,$3,$4) RETURNING *`;
+    const text = `INSERT INTO purchase (userId,paidcontentid)
+    VALUES ($1, getPCId($2::varchar(40),$3,$4::money,$5::varchar(10))) RETURNING *`;
     const values = [
+        // Get user id
+        res.locals.user.data.id,
+        // Get subscription id
         body.name,
         body.appid,
         body.price,
         body.monetaryUnit]
-    // console.log(body)
+    // const text = `INSERT INTO paidcontent
+    // (name,appId,price,monetaryUnit)
+    // VALUES ($1,$2,$3,$4) RETURNING *`;
+    // const values = [
+    //     body.name,
+    //     body.appid,
+    //     body.price,
+    //     body.monetaryUnit]
     pool.connect((err, client, release) => {
         // console.log("connected: POST PaidContent")
         if (err) {
@@ -50,17 +59,22 @@ exports.addPaidContent = async (req, res) => {
 //?////////////////////
 exports.updatePaidContent = async (req, res) => {
     const { body } = req;
-    const text = `UPDATE paidcontent 
-    SET name = $1,
-        appId = $2,
-        price = $3,
-        monetaryUnit = $4
-    WHERE id = $5 RETURNING *`;
+    console.log(body)
+    const text = `UPDATE purchase
+    SET paidcontentid = PaidCont.PCId,
+        userid = $1
+    FROM (SELECT * FROM getPCId($2::varchar(40),$3,$4::money,$5::varchar(10)))
+    AS PaidCont
+    WHERE id = $6 RETURNING *`
     const values = [
+        // Get user id
+        res.locals.user.data.id,
+        // Get subscription id
         body.name,
         body.appid,
         body.price,
         body.monetaryUnit,
+
         body.id]
     pool.connect((err, client, release) => {
         // console.log("connected: PUT")
@@ -77,8 +91,8 @@ exports.updatePaidContent = async (req, res) => {
                 res.status(500).json(errMsg);
                 return console.error(errMsg, err.stack)
             }
-            // console.log("PaidContent put response data:")
-            // console.log(result.rows)
+            console.log("PaidContent put response data:")
+            console.log(result.rows)
             res.status(200).json(result.rows);
         })
     })
@@ -88,26 +102,26 @@ exports.updatePaidContent = async (req, res) => {
 //?  DELETE删除PaidContent
 //?////////////////////
 exports.deletePaidContent = async (req, res) => {
-    const text = `DELETE FROM paidcontent WHERE id = $1`;
+    const text = `DELETE FROM purchase WHERE id = $1`;
     const values = [req.params.id]
-    pool.connect((err, client, release) => {
+    pool.connect(async (err, client, release) => {
         // console.log("DELETE: connected")
         if (err) {
             const errMsg = 'DELETE: Error acquiring client'
             res.status(500).json(errMsg);
             return console.error(errMsg, err.stack)
         }
-        client.query(text, values, async (err, result) => {
-            // console.log("'DELETE: query finished")
-            release()
-            if (err) {
-                const errMsg = 'DELETE: Error executing query'
-                res.status(500).json(errMsg);
-                return console.error(errMsg, err.stack)
-            }
-            // console.log(result)
+        try {
+            const deletePurchaseResult = await client.query(text, values);
+            await client.query('DELETE FROM paidcontent pc WHERE NOT EXISTS (select 1 from purchase p where pc.id = p.paidcontentid)');
+            console.log(deletePurchaseResult.rows)
             res.status(200).send();
-        })
+        } catch (err) {
+            release()
+            const errMsg = 'DELETE: Error executing query'
+            res.status(500).json(errMsg);
+            return console.error(errMsg, err.stack)
+        }
     })
 }
 
@@ -118,20 +132,29 @@ exports.deletePaidContent = async (req, res) => {
 //?////////////////////
 const formatPCInfoForFrontend = async (PC) =>
     PC.map(sub => {
-        const name = sub.name;
         const price = sub.price.slice(1, sub.price.length);
-        const monetaryUnit = sub.monetaryunit;
-        const id = sub.id;
-        const appid = sub.appid;
-        // console.log(Object.entries(sub.cycle))
-        return { id, appid, name, price, monetaryUnit };
-
+        return {
+            id: sub.id,
+            appid: sub.appid,
+            name: sub.name,
+            price,
+            monetaryUnit: sub.monetaryunit
+        };
     })
-
-
 
 exports.queryAllPaidContents = async (req, res) => {
     // console.log("connecting")
+    const text = `SELECT
+        paidcontent.id AS id,
+        appid,
+        name,
+        price,
+        monetaryunit
+    FROM paidcontent INNER JOIN purchase
+    ON paidcontent.id = purchase.paidcontentid
+    WHERE userid = $1
+    ORDER BY appid, purchase.id ASC`;
+    const values = [res.locals.user.data.id]
     pool.connect((err, client, release) => {
         // console.log("connected")
         if (err) {
@@ -139,7 +162,7 @@ exports.queryAllPaidContents = async (req, res) => {
             res.status(500).json(errMsg);
             return console.error(errMsg, err.stack)
         }
-        client.query('SELECT * FROM paidcontent ORDER BY appid, id ASC', async (err, result) => {
+        client.query(text, values, async (err, result) => {
             // console.log("GET query finished")
             release()
             if (err) {
@@ -147,6 +170,7 @@ exports.queryAllPaidContents = async (req, res) => {
                 res.status(500).json(errMsg);
                 return console.error(errMsg, err.stack)
             }
+            // console.log(result.rows)
             // console.log("----------------SUBSCRIPTIONS---------------------")
             const processedData = await formatPCInfoForFrontend(result.rows);
             // console.log("processedData")

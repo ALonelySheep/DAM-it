@@ -13,12 +13,16 @@ const pool = new Pool({
 //?////////////////////
 exports.addApp = async (req, res) => {
     const { body } = req;
+    console.log(body)
     // console.log("Add App: body")
     // console.log(body)
-    const text = `INSERT INTO app 
-    (name, price, monetaryUnit)
-    VALUES ($1,$2,$3) RETURNING *`;
+    const text = `
+    INSERT INTO installation (userId,appId)
+    VALUES ($1, getAppId($2::varchar(40),$3::money,$4::varchar(10)))   RETURNING *`;
     const values = [
+        // Get user id
+        res.locals.user.data.id,
+        // Get subscription id
         body.name,
         body.price,
         body.monetaryUnit]
@@ -48,12 +52,14 @@ exports.addApp = async (req, res) => {
 //?////////////////////
 exports.updateApp = async (req, res) => {
     const { body } = req;
-    const text = `UPDATE app 
-    SET name = $1,
-        price = $2,
-        monetaryUnit = $3
-    WHERE id = $4 RETURNING *`;
+    const text = `UPDATE installation
+    SET appId = app.appId,
+        userId = $1
+    FROM (SELECT * FROM getAppId($2::varchar(40),$3::money,$4::varchar(10))) 
+    AS app
+    WHERE id = $5 RETURNING *`
     const values = [
+        res.locals.user.data.id,
         body.name,
         body.price,
         body.monetaryUnit,
@@ -82,26 +88,26 @@ exports.updateApp = async (req, res) => {
 //?  DELETE删除App
 //?////////////////////
 exports.deleteApp = async (req, res) => {
-    const text = `DELETE FROM app WHERE id = $1`;
+    const text = `DELETE FROM installation WHERE id = $1`;
     const values = [req.params.id]
-    pool.connect((err, client, release) => {
+    pool.connect(async (err, client, release) => {
         // console.log("DELETE App: connected")
         if (err) {
             const errMsg = 'DELETE App: Error acquiring client'
             res.status(500).json(errMsg);
             return console.error(errMsg, err.stack)
         }
-        client.query(text, values, async (err, result) => {
-            // console.log("'DELETE App: query finished")
-            release()
-            if (err) {
-                const errMsg = 'DELETE App: Error executing query'
-                res.status(500).json(errMsg);
-                return console.error(errMsg, err.stack)
-            }
-            // console.log(result)
+        try {
+            const deleteInstallationResult = await client.query(text, values);
+            await client.query('DELETE FROM App app WHERE NOT EXISTS (select 1 from installation ins where app.id = ins.appId)');
+            console.log(deleteInstallationResult.rows)
             res.status(200).send();
-        })
+        } catch (err) {
+            release()
+            const errMsg = 'DELETE: Error executing query'
+            res.status(500).json(errMsg);
+            return console.error(errMsg, err.stack)
+        }
     })
 }
 //?////////////////////
@@ -109,27 +115,44 @@ exports.deleteApp = async (req, res) => {
 //?////////////////////
 const formatAppinfo = async (apps) =>
     apps.map(app => {
-        const id = app.id;
-        const name = app.name;
         const price = app.price.slice(1, app.price.length);
-        const monetaryUnit = app.monetaryunit;
-        return { id, name, price, monetaryUnit };
+        return {
+            id: app.id,
+            appId: app.appid,
+            name: app.name,
+            price,
+            monetaryUnit: app.monetaryunit,
+            date: app.date
+        };
     })
 
 exports.queryAllApps = async (req, res) => {
+    const text = `SELECT
+        installation.id AS id,
+        app.id AS appid,
+        name,
+        price,
+        monetaryunit,
+        date
+    FROM app INNER JOIN installation
+    ON app.id = installation.appid
+    WHERE userid = $1
+    ORDER BY appid ASC`;
+    const values = [res.locals.user.data.id]
     pool.connect((err, client, release) => {
         if (err) {
             const errMsg = 'Error acquiring client'
             res.status(500).json(errMsg);
             return console.error(errMsg, err.stack)
         }
-        client.query('SELECT * FROM app ORDER BY id ASC', async (err, result) => {
+        client.query(text, values, async (err, result) => {
             release()
             if (err) {
                 const errMsg = 'Error executing query'
                 res.status(500).json(errMsg);
                 return console.error(errMsg, err.stack)
             }
+            // console.log(result.rows)
             // console.log("---------------------APP---------------------")
             const processedData = await formatAppinfo(result.rows);
             // console.log(processedData)
