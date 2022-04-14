@@ -31,8 +31,8 @@ export const addApp = async (userToken, app) => {
 export const updateApp = async (userToken, app) => {
     delete app.submit;
     delete app.isDelete;
-    // console.log("PUT app Data:");
-    // console.log(app);
+    console.log("PUT app Data:");
+    console.log(app);
     const response = await fetch(`${API_ENDPOINT}/app/${app.id}`, {
         method: "PUT",
         body: JSON.stringify(app),
@@ -41,8 +41,10 @@ export const updateApp = async (userToken, app) => {
             "authorization": userToken,
         },
     });
-
-    return response.status;
+    const resData = await response.json()
+    console.log("Update App Response:")
+    console.log(resData[0])
+    return resData[0];
 }
 
 export const deleteApp = async (userToken, id) => {

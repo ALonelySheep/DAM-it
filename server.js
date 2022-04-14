@@ -10,6 +10,7 @@ const appRouter = require('./router/appRouter');
 const paidContentRouter = require('./router/paidContentRouter');
 const personalWorkRouter = require('./router/personalWorkRouter');
 const deviceRouter = require('./router/deviceRouter');
+const userRouter = require('./router/userRouter');
 
 
 // Running express server
@@ -31,6 +32,7 @@ app.use(
 )
 
 app.use('/test', testRouter);
+app.use('/user', userRouter);
 app.use('/app', appRouter);
 app.use('/subscription', subscriptionRouter);
 app.use('/paid-content', paidContentRouter);

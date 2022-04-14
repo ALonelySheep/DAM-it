@@ -233,126 +233,126 @@ VALUES
 
 --! installation x 100 ----------------------------------------
 
-INSERT INTO installation (userId, appId, ifUninstalled, date, category)
-VALUES
-  ('623f144c66c804651a311f54',5,'true','Feb 14, 2023','Efficiency'),
-  ('623f144c66c804651a311f54',19,'true','Dec 21, 2020','Money'),
-  ('623f144c66c804651a311f54',11,'true','Mar 1, 2022','Money'),
-  ('623f144c66c804651a311f54',4,'false','Nov 9, 2020','scifi'),
-  ('623f144c66c804651a311f54',15,'true','Sep 18, 2020','Money'),
-  ('623f144c66c804651a311f54',19,'false','Jan 17, 2021','Self'),
-  ('623f144c66c804651a311f54',6,'false','Aug 6, 2020','Efficiency'),
-  ('623f144c66c804651a311f54',15,'true','May 11, 2022','Money'),
-  ('623f144c66c804651a311f54',2,'true','Sep 15, 2021','Efficiency'),
-  ('623f144c66c804651a311f54',1,'true','Aug 30, 2021','Self');
-INSERT INTO installation (userId, appId, ifUninstalled, date, category)
-VALUES
-  ('623f144c66c804651a311f54',13,'false','Apr 14, 2022','Self'),
-  ('623f144c66c804651a311f54',14,'true','Jul 24, 2022','Money'),
-  ('623f144c66c804651a311f54',9,'true','Jan 4, 2021','Self'),
-  ('623f144c66c804651a311f54',12,'false','May 20, 2022','Self'),
-  ('623f144c66c804651a311f54',14,'false','Nov 6, 2020','Money'),
-  ('623f144c66c804651a311f54',10,'true','Apr 5, 2021','Self'),
-  ('623f144c66c804651a311f54',13,'true','Aug 24, 2022','Efficiency'),
-  ('623f144c66c804651a311f54',5,'true','Jun 15, 2021','Self'),
-  ('623f144c66c804651a311f54',15,'true','Oct 3, 2021','scifi'),
-  ('623f144c66c804651a311f54',20,'true','Mar 16, 2022','Art');
-INSERT INTO installation (userId, appId, ifUninstalled, date, category)
-VALUES
-  ('623f144c66c804651a311f54',15,'true','Feb 2, 2022','Money'),
-  ('623f144c66c804651a311f54',14,'true','Jun 23, 2022','Efficiency'),
-  ('623f144c66c804651a311f54',20,'false','Nov 12, 2020','scifi'),
-  ('623f144c66c804651a311f54',14,'false','Jul 7, 2022','Self'),
-  ('623f144c66c804651a311f54',9,'true','Dec 31, 2022','scifi'),
-  ('623f144c66c804651a311f54',4,'true','Sep 18, 2022','Money'),
-  ('623f144c66c804651a311f54',14,'false','Sep 23, 2021','Money'),
-  ('623f144c66c804651a311f54',3,'false','Oct 26, 2021','Efficiency'),
-  ('623f144c66c804651a311f54',3,'false','Jul 31, 2022','Money'),
-  ('623f144c66c804651a311f54',14,'false','Oct 5, 2022','Self');
-INSERT INTO installation (userId, appId, ifUninstalled, date, category)
-VALUES
-  ('623f144c66c804651a311f54',10,'true','Jul 1, 2020','Money'),
-  ('623f144c66c804651a311f54',16,'true','Sep 17, 2020','Self'),
-  ('623f144c66c804651a311f54',13,'false','May 5, 2021','Money'),
-  ('623f144c66c804651a311f54',13,'false','Mar 25, 2022','Money'),
-  ('623f144c66c804651a311f54',8,'true','Dec 13, 2020','Money'),
-  ('623f144c66c804651a311f54',8,'false','Dec 4, 2021','Money'),
-  ('623f144c66c804651a311f54',12,'true','Aug 28, 2020','scifi'),
-  ('623f144c66c804651a311f54',12,'true','Oct 4, 2020','Money'),
-  ('623f144c66c804651a311f54',20,'false','Sep 21, 2022','Money'),
-  ('623f144c66c804651a311f54',13,'true','Nov 19, 2020','Self');
-INSERT INTO installation (userId, appId, ifUninstalled, date, category)
-VALUES
-  ('623f144c66c804651a311f54',19,'false','Apr 5, 2021','Self'),
-  ('623f144c66c804651a311f54',2,'false','Mar 6, 2021','Money'),
-  ('623f144c66c804651a311f54',4,'false','Jun 29, 2022','Money'),
-  ('623f144c66c804651a311f54',18,'false','Mar 7, 2022','Self'),
-  ('623f144c66c804651a311f54',19,'true','Dec 17, 2021','Money'),
-  ('623f144c66c804651a311f54',6,'false','Jan 12, 2023','Self'),
-  ('623f144c66c804651a311f54',4,'false','Jun 9, 2021','Money'),
-  ('623f144c66c804651a311f54',11,'false','Sep 16, 2021','Self'),
-  ('623f144c66c804651a311f54',20,'false','Sep 16, 2022','Self'),
-  ('623f144c66c804651a311f54',10,'false','Apr 27, 2021','Money');
-INSERT INTO installation (userId, appId, ifUninstalled, date, category)
-VALUES
-  ('623f144c66c804651a311f54',11,'false','Jul 12, 2020','scifi'),
-  ('623f144c66c804651a311f54',14,'false','Apr 6, 2021','scifi'),
-  ('623f144c66c804651a311f54',3,'false','Feb 28, 2021','Art'),
-  ('623f144c66c804651a311f54',13,'false','Oct 26, 2020','Self'),
-  ('623f144c66c804651a311f54',2,'false','Apr 20, 2021','Self'),
-  ('623f144c66c804651a311f54',2,'true','Jul 11, 2022','Efficiency'),
-  ('623f144c66c804651a311f54',15,'true','Mar 29, 2021','scifi'),
-  ('623f144c66c804651a311f54',13,'false','May 1, 2021','scifi'),
-  ('623f144c66c804651a311f54',7,'true','Dec 13, 2022','Money'),
-  ('623f144c66c804651a311f54',5,'true','Mar 20, 2022','Money');
-INSERT INTO installation (userId, appId, ifUninstalled, date, category)
-VALUES
-  ('623f144c66c804651a311f54',14,'false','Apr 2, 2022','Efficiency'),
-  ('623f144c66c804651a311f54',19,'false','Apr 24, 2022','Money'),
-  ('623f144c66c804651a311f54',4,'true','Feb 3, 2022','Self'),
-  ('623f144c66c804651a311f54',17,'true','Jun 15, 2021','Money'),
-  ('623f144c66c804651a311f54',9,'true','May 30, 2022','Art'),
-  ('623f144c66c804651a311f54',8,'true','Nov 24, 2022','scifi'),
-  ('623f144c66c804651a311f54',11,'true','Jul 29, 2020','Self'),
-  ('623f144c66c804651a311f54',1,'true','Jan 18, 2021','Art'),
-  ('623f144c66c804651a311f54',1,'false','Nov 14, 2022','Self'),
-  ('623f144c66c804651a311f54',15,'false','Jan 3, 2021','Money');
-INSERT INTO installation (userId, appId, ifUninstalled, date, category)
-VALUES
-  ('623f144c66c804651a311f54',6,'false','Oct 20, 2021','Art'),
-  ('623f144c66c804651a311f54',12,'false','Apr 30, 2022','Money'),
-  ('623f144c66c804651a311f54',14,'true','Aug 10, 2021','scifi'),
-  ('623f144c66c804651a311f54',2,'true','Mar 12, 2022','Self'),
-  ('623f144c66c804651a311f54',14,'true','Jun 13, 2021','scifi'),
-  ('623f144c66c804651a311f54',3,'false','Jul 16, 2022','Efficiency'),
-  ('623f144c66c804651a311f54',19,'false','Aug 26, 2022','Self'),
-  ('623f144c66c804651a311f54',8,'true','Sep 16, 2022','scifi'),
-  ('623f144c66c804651a311f54',2,'true','Jun 10, 2021','scifi'),
-  ('623f144c66c804651a311f54',17,'true','Oct 14, 2022','Money');
-INSERT INTO installation (userId, appId, ifUninstalled, date)
-VALUES
-  ('62556bea115616412127d595',11,'false','Aug 26, 2022'),
-  ('62556bea115616412127d595',16,'true','Dec 21, 2021'),
-  ('62556bea115616412127d595',13,'false','Dec 23, 2020'),
-  ('62556bea115616412127d595',7,'false','Jul 1, 2021'),
-  ('62556bea115616412127d595',3,'true','Mar 19, 2022'),
-  ('62556bea115616412127d595',18,'true','Jun 29, 2021'),
-  ('62556bea115616412127d595',16,'false','Dec 31, 2021'),
-  ('62556bea115616412127d595',16,'false','Oct 9, 2022'),
-  ('62556bea115616412127d595',16,'true','Sep 29, 2020'),
-  ('62556bea115616412127d595',7,'true','Sep 23, 2021');
-INSERT INTO installation (userId, appId, ifUninstalled, date)
-VALUES
-  ('62556bea115616412127d595',15,'false','Jul 31, 2020'),
-  ('62556bea115616412127d595',3,'true','May 24, 2021'),
-  ('62556bea115616412127d595',18,'true','Jan 7, 2022'),
-  ('62556bea115616412127d595',7,'true','May 7, 2022'),
-  ('62556bea115616412127d595',15,'false','Feb 6, 2021'),
-  ('62556bea115616412127d595',6,'true','Apr 3, 2021'),
-  ('62556bea115616412127d595',10,'true','Dec 8, 2022'),
-  ('62556bea115616412127d595',8,'true','Jun 29, 2020'),
-  ('62556bea115616412127d595',19,'false','Mar 7, 2022'),
-  ('62556bea115616412127d595',15,'false','Aug 19, 2021');
+-- INSERT INTO installation (userId, appId, ifUninstalled, date, category)
+-- VALUES
+--   ('623f144c66c804651a311f54',5,'true','Feb 14, 2023','Efficiency'),
+--   ('623f144c66c804651a311f54',19,'true','Dec 21, 2020','Money'),
+--   ('623f144c66c804651a311f54',11,'true','Mar 1, 2022','Money'),
+--   ('623f144c66c804651a311f54',4,'false','Nov 9, 2020','scifi'),
+--   ('623f144c66c804651a311f54',15,'true','Sep 18, 2020','Money'),
+--   ('623f144c66c804651a311f54',19,'false','Jan 17, 2021','Self'),
+--   ('623f144c66c804651a311f54',6,'false','Aug 6, 2020','Efficiency'),
+--   ('623f144c66c804651a311f54',15,'true','May 11, 2022','Money'),
+--   ('623f144c66c804651a311f54',2,'true','Sep 15, 2021','Efficiency'),
+--   ('623f144c66c804651a311f54',1,'true','Aug 30, 2021','Self');
+-- INSERT INTO installation (userId, appId, ifUninstalled, date, category)
+-- VALUES
+--   ('623f144c66c804651a311f54',13,'false','Apr 14, 2022','Self'),
+--   ('623f144c66c804651a311f54',14,'true','Jul 24, 2022','Money'),
+--   ('623f144c66c804651a311f54',9,'true','Jan 4, 2021','Self'),
+--   ('623f144c66c804651a311f54',12,'false','May 20, 2022','Self'),
+--   ('623f144c66c804651a311f54',14,'false','Nov 6, 2020','Money'),
+--   ('623f144c66c804651a311f54',10,'true','Apr 5, 2021','Self'),
+--   ('623f144c66c804651a311f54',13,'true','Aug 24, 2022','Efficiency'),
+--   ('623f144c66c804651a311f54',5,'true','Jun 15, 2021','Self'),
+--   ('623f144c66c804651a311f54',15,'true','Oct 3, 2021','scifi'),
+--   ('623f144c66c804651a311f54',20,'true','Mar 16, 2022','Art');
+-- INSERT INTO installation (userId, appId, ifUninstalled, date, category)
+-- VALUES
+--   ('623f144c66c804651a311f54',15,'true','Feb 2, 2022','Money'),
+--   ('623f144c66c804651a311f54',14,'true','Jun 23, 2022','Efficiency'),
+--   ('623f144c66c804651a311f54',20,'false','Nov 12, 2020','scifi'),
+--   ('623f144c66c804651a311f54',14,'false','Jul 7, 2022','Self'),
+--   ('623f144c66c804651a311f54',9,'true','Dec 31, 2022','scifi'),
+--   ('623f144c66c804651a311f54',4,'true','Sep 18, 2022','Money'),
+--   ('623f144c66c804651a311f54',14,'false','Sep 23, 2021','Money'),
+--   ('623f144c66c804651a311f54',3,'false','Oct 26, 2021','Efficiency'),
+--   ('623f144c66c804651a311f54',3,'false','Jul 31, 2022','Money'),
+--   ('623f144c66c804651a311f54',14,'false','Oct 5, 2022','Self');
+-- INSERT INTO installation (userId, appId, ifUninstalled, date, category)
+-- VALUES
+--   ('623f144c66c804651a311f54',10,'true','Jul 1, 2020','Money'),
+--   ('623f144c66c804651a311f54',16,'true','Sep 17, 2020','Self'),
+--   ('623f144c66c804651a311f54',13,'false','May 5, 2021','Money'),
+--   ('623f144c66c804651a311f54',13,'false','Mar 25, 2022','Money'),
+--   ('623f144c66c804651a311f54',8,'true','Dec 13, 2020','Money'),
+--   ('623f144c66c804651a311f54',8,'false','Dec 4, 2021','Money'),
+--   ('623f144c66c804651a311f54',12,'true','Aug 28, 2020','scifi'),
+--   ('623f144c66c804651a311f54',12,'true','Oct 4, 2020','Money'),
+--   ('623f144c66c804651a311f54',20,'false','Sep 21, 2022','Money'),
+--   ('623f144c66c804651a311f54',13,'true','Nov 19, 2020','Self');
+-- INSERT INTO installation (userId, appId, ifUninstalled, date, category)
+-- VALUES
+--   ('623f144c66c804651a311f54',19,'false','Apr 5, 2021','Self'),
+--   ('623f144c66c804651a311f54',2,'false','Mar 6, 2021','Money'),
+--   ('623f144c66c804651a311f54',4,'false','Jun 29, 2022','Money'),
+--   ('623f144c66c804651a311f54',18,'false','Mar 7, 2022','Self'),
+--   ('623f144c66c804651a311f54',19,'true','Dec 17, 2021','Money'),
+--   ('623f144c66c804651a311f54',6,'false','Jan 12, 2023','Self'),
+--   ('623f144c66c804651a311f54',4,'false','Jun 9, 2021','Money'),
+--   ('623f144c66c804651a311f54',11,'false','Sep 16, 2021','Self'),
+--   ('623f144c66c804651a311f54',20,'false','Sep 16, 2022','Self'),
+--   ('623f144c66c804651a311f54',10,'false','Apr 27, 2021','Money');
+-- INSERT INTO installation (userId, appId, ifUninstalled, date, category)
+-- VALUES
+--   ('623f144c66c804651a311f54',11,'false','Jul 12, 2020','scifi'),
+--   ('623f144c66c804651a311f54',14,'false','Apr 6, 2021','scifi'),
+--   ('623f144c66c804651a311f54',3,'false','Feb 28, 2021','Art'),
+--   ('623f144c66c804651a311f54',13,'false','Oct 26, 2020','Self'),
+--   ('623f144c66c804651a311f54',2,'false','Apr 20, 2021','Self'),
+--   ('623f144c66c804651a311f54',2,'true','Jul 11, 2022','Efficiency'),
+--   ('623f144c66c804651a311f54',15,'true','Mar 29, 2021','scifi'),
+--   ('623f144c66c804651a311f54',13,'false','May 1, 2021','scifi'),
+--   ('623f144c66c804651a311f54',7,'true','Dec 13, 2022','Money'),
+--   ('623f144c66c804651a311f54',5,'true','Mar 20, 2022','Money');
+-- INSERT INTO installation (userId, appId, ifUninstalled, date, category)
+-- VALUES
+--   ('623f144c66c804651a311f54',14,'false','Apr 2, 2022','Efficiency'),
+--   ('623f144c66c804651a311f54',19,'false','Apr 24, 2022','Money'),
+--   ('623f144c66c804651a311f54',4,'true','Feb 3, 2022','Self'),
+--   ('623f144c66c804651a311f54',17,'true','Jun 15, 2021','Money'),
+--   ('623f144c66c804651a311f54',9,'true','May 30, 2022','Art'),
+--   ('623f144c66c804651a311f54',8,'true','Nov 24, 2022','scifi'),
+--   ('623f144c66c804651a311f54',11,'true','Jul 29, 2020','Self'),
+--   ('623f144c66c804651a311f54',1,'true','Jan 18, 2021','Art'),
+--   ('623f144c66c804651a311f54',1,'false','Nov 14, 2022','Self'),
+--   ('623f144c66c804651a311f54',15,'false','Jan 3, 2021','Money');
+-- INSERT INTO installation (userId, appId, ifUninstalled, date, category)
+-- VALUES
+--   ('623f144c66c804651a311f54',6,'false','Oct 20, 2021','Art'),
+--   ('623f144c66c804651a311f54',12,'false','Apr 30, 2022','Money'),
+--   ('623f144c66c804651a311f54',14,'true','Aug 10, 2021','scifi'),
+--   ('623f144c66c804651a311f54',2,'true','Mar 12, 2022','Self'),
+--   ('623f144c66c804651a311f54',14,'true','Jun 13, 2021','scifi'),
+--   ('623f144c66c804651a311f54',3,'false','Jul 16, 2022','Efficiency'),
+--   ('623f144c66c804651a311f54',19,'false','Aug 26, 2022','Self'),
+--   ('623f144c66c804651a311f54',8,'true','Sep 16, 2022','scifi'),
+--   ('623f144c66c804651a311f54',2,'true','Jun 10, 2021','scifi'),
+--   ('623f144c66c804651a311f54',17,'true','Oct 14, 2022','Money');
+-- INSERT INTO installation (userId, appId, ifUninstalled, date)
+-- VALUES
+--   ('62556bea115616412127d595',11,'false','Aug 26, 2022'),
+--   ('62556bea115616412127d595',16,'true','Dec 21, 2021'),
+--   ('62556bea115616412127d595',13,'false','Dec 23, 2020'),
+--   ('62556bea115616412127d595',7,'false','Jul 1, 2021'),
+--   ('62556bea115616412127d595',3,'true','Mar 19, 2022'),
+--   ('62556bea115616412127d595',18,'true','Jun 29, 2021'),
+--   ('62556bea115616412127d595',16,'false','Dec 31, 2021'),
+--   ('62556bea115616412127d595',16,'false','Oct 9, 2022'),
+--   ('62556bea115616412127d595',16,'true','Sep 29, 2020'),
+--   ('62556bea115616412127d595',7,'true','Sep 23, 2021');
+-- INSERT INTO installation (userId, appId, ifUninstalled, date)
+-- VALUES
+--   ('62556bea115616412127d595',15,'false','Jul 31, 2020'),
+--   ('62556bea115616412127d595',3,'true','May 24, 2021'),
+--   ('62556bea115616412127d595',18,'true','Jan 7, 2022'),
+--   ('62556bea115616412127d595',7,'true','May 7, 2022'),
+--   ('62556bea115616412127d595',15,'false','Feb 6, 2021'),
+--   ('62556bea115616412127d595',6,'true','Apr 3, 2021'),
+--   ('62556bea115616412127d595',10,'true','Dec 8, 2022'),
+--   ('62556bea115616412127d595',8,'true','Jun 29, 2020'),
+--   ('62556bea115616412127d595',19,'false','Mar 7, 2022'),
+--   ('62556bea115616412127d595',15,'false','Aug 19, 2021');
 
 -- -- ! renewal 70 -----------------------------------
 --INSERT INTO renewal (userId,subscriptionId,startDate,numberOfRenewal,reminder,category)

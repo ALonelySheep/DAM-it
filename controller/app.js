@@ -16,8 +16,7 @@ exports.addApp = async (req, res) => {
     console.log(body)
     // console.log("Add App: body")
     // console.log(body)
-    const text = `
-    INSERT INTO installation (userId,appId)
+    const text = `INSERT INTO installation (userId,appId)
     VALUES ($1, getAppId($2::varchar(40),$3::money,$4::varchar(10)))   RETURNING *`;
     const values = [
         // Get user id
@@ -79,7 +78,8 @@ exports.updateApp = async (req, res) => {
                 res.status(500).json(errMsg);
                 return console.error(errMsg, err.stack)
             }
-            // console.log(result.rows)
+            console.log("APP UPDATE")
+            console.log(result.rows)
             res.status(200).json(result.rows);
         })
     })

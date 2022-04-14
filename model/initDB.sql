@@ -2,8 +2,8 @@ BEGIN;
 
 CREATE TABLE userAccount(
     id              varchar(30)     PRIMARY KEY,
-    username        varchar(30)     NOT NULL,
-    password	    varchar(50)	    NOT NULL,
+    username        varchar(30)     ,
+    password	    varchar(50)	    ,
     avatar          varchar(100)    ,	
     vip             BOOLEAN		    DEFAULT false,
     admin           BOOLEAN		    DEFAULT false
@@ -82,14 +82,14 @@ CREATE TABLE work(
 );
 
 -- 输入subscription的信息, 返回对应的Subscription的id, 如果不存在则自动创建
+-- (name, appId, price, monetaryUnit, cycle)
 CREATE OR REPLACE FUNCTION getSubId(varchar(40),integer,money,varchar(10),interval) RETURNS TABLE (SubId integer) AS
 $func$ 
 BEGIN
     RETURN QUERY SELECT id FROM subscription WHERE name = $1 AND appId = $2 AND price = $3 AND monetaryUnit = $4 AND cycle = $5;
     IF NOT FOUND THEN
         RETURN QUERY 
-            INSERT INTO subscription (name,appId,price,monetaryUnit,cycle) 
-            VALUES ($1,$2,$3,$4,$5) ON CONFLICT DO NOTHING RETURNING id;
+            INSERT INTO subscription (name,appId,price,monetaryUnit,cycle) VALUES ($1,$2,$3,$4,$5) ON CONFLICT DO NOTHING RETURNING id;
     END IF;
 END
 $func$

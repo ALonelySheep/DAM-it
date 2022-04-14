@@ -61,7 +61,7 @@ exports.updatePaidContent = async (req, res) => {
     const { body } = req;
     console.log(body)
     const text = `UPDATE purchase
-    SET paidcontentid = PaidCont.PCId,
+    SET paidcontentid = PaidCont.pcid,
         userid = $1
     FROM (SELECT * FROM getPCId($2::varchar(40),$3,$4::money,$5::varchar(10)))
     AS PaidCont
@@ -145,7 +145,7 @@ const formatPCInfoForFrontend = async (PC) =>
 exports.queryAllPaidContents = async (req, res) => {
     // console.log("connecting")
     const text = `SELECT
-        paidcontent.id AS id,
+        purchase.id AS id,
         appid,
         name,
         price,

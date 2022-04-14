@@ -1,6 +1,7 @@
 import { Guard } from '@authing/react-ui-components';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from 'AuthProvider';
+import addUser from 'api/userAPI';
 // import { useEffect, useState } from 'react';
 
 // 引入 css 文件
@@ -23,9 +24,10 @@ const LoginAuth = () => {
         auth.setUser(userInfo);
         auth.setClient(authClient);
     };
-    const onRegister = (userInfo, authClient) => {
+    const onRegister = async(userInfo, authClient) => {
         console.log("Register")
-        console.log(userInfo)
+        console.log(userInfo.token)
+        await addUser(userInfo.token)
         auth.setUser(userInfo);
         auth.setClient(authClient);
     }

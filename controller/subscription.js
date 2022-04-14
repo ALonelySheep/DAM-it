@@ -36,16 +36,17 @@ exports.addSubscription = async (req, res) => {
     // console.log(body)
 
     pool.connect((err, client, release) => {
-        // console.log("connected: POST Subscription")
+        console.log("connected: POST Subscription")
         if (err) {
             const errMsg = 'POST: error acquiring client'
             res.status(500).json(errMsg);
             return console.error(errMsg, err.stack)
         }
         client.query(text, values, async (err, result) => {
-            // console.log("POST: Subscription query finished")
+            console.log("POST: Subscription query finished")
             release()
             if (err) {
+                console.log("POST: Error executing query")
                 const errMsg = 'Error executing query: POST'
                 res.status(500).json(errMsg);
                 return console.error(errMsg, err.stack)

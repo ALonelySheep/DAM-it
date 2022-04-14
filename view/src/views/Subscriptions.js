@@ -422,7 +422,7 @@ const Subscriptions = () => {
 
     const makeGridForApp = (app, subscriptions) => (
         <Grid key={`${app.id}-${app.date}`} item xs={12}>
-            <SubCard key={`${app.id}-${app.date}`} title={app.name} secondary={<EditAppButton app={app} title={`Edit ${app.name}`} icon={<IconEdit />} />}>
+            <SubCard key={`${app.id}-${app.date}`} title={app.name} secondary={<EditAppButton app={app} title={`${app.name}`} icon={<IconEdit />} />}>
                 <Grid key={`${app.id}-${app.date}`} container spacing={gridSpacing}>
                     {subscriptions.map(makeGridForSub)}
                     <Grid key="New" item xs={12} sm={6} md={4} lg={3}>

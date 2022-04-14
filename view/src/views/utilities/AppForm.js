@@ -73,16 +73,24 @@ const AppForm = ({ title, setOpen, setLoading, isDialogClosed, setDialogClosed, 
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
                     // e.preventDefault();
                     try {
-                        // console.log("Form values");
-                        // console.log(values);
+                        console.log("Form values");
+                        console.log(values);
                         // console.log("is Delete");
                         // console.log(values.isDelete);
                         let response;
                         if (isEdit) {
                             if (values.isDelete)
                                 response = await deleteApp(auth.userInfo.token, values.id);
-                            else
+                            else {
                                 response = await updateApp(auth.userInfo.token, values);
+                                // 如果appid改变了, 还需要更新这个用户这个app下面的所有subscripion 和 paidContents
+                                if (values.appid !== response.appid) {
+                                    console.log(`appid changed from ${values.appId} to ${response.appid}`);
+                                    // 更新subscription
+
+                                    // 更新paidContent
+                                }
+                            }
                         } else {
                             response = await addApp(auth.userInfo.token, values);
                         }
@@ -118,6 +126,7 @@ const AppForm = ({ title, setOpen, setLoading, isDialogClosed, setDialogClosed, 
                                         type="text"
                                         value={values.name ?? ''}
                                         name="name"
+                                        disabled={!!isEdit}
                                         onBlur={handleBlur}
                                         onChange={handleChange}
                                         inputProps={{}}
@@ -145,6 +154,7 @@ const AppForm = ({ title, setOpen, setLoading, isDialogClosed, setDialogClosed, 
                                         type="number"
                                         value={values.price ?? 0}
                                         name="price"
+                                        disabled={!!isEdit}
                                         onBlur={handleBlur}
                                         onChange={handleChange}
                                         inputProps={{}}
@@ -172,6 +182,7 @@ const AppForm = ({ title, setOpen, setLoading, isDialogClosed, setDialogClosed, 
                                         id="monetary-unit-select"
                                         name="monetaryUnit"
                                         label="Monetary Unit"
+                                        disabled={!!isEdit}
                                         value={values.monetaryUnit ?? ''}
                                         onChange={handleChange}
                                     >
@@ -193,7 +204,8 @@ const AppForm = ({ title, setOpen, setLoading, isDialogClosed, setDialogClosed, 
                             </Box>
                         )}
 
-                        <Box sx={{ mt: 2 }}>
+                        {/* 暂时取消App修改, 因为app修改会导致对应的Sub与PC的消失. 不太好补这个bug */}
+                        <Box hidden={!!isEdit} sx={{ mt: 2 }}>
                             <AnimateButton>
                                 <Button
                                     disableElevation
