@@ -15,9 +15,9 @@
   "scripts": {
     "start": "node server.js",
     "startdev": "nodemon server.js",
-    "build-view":"cd view && DISABLE_ESLINT_PLUGIN=true react-scripts build",
-    "initialize-view":"cd view && npm install",
-    "heroku-postbuild":"npm run initialize-view && npm run build-view",
+    "build-view": "cd view && npm run build",
+    "initialize-view": "cd view && npm install",
+    "heroku-postbuild": "DISABLE_ESLINT_PLUGIN=true npm run initialize-view && npm run build-view",
     "lint:check": "eslint ."
   },
   "author": "Chiyuan Fu",
