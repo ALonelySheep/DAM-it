@@ -10,7 +10,11 @@
     ]
   },
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "node server.js",
+    "startdev": "nodemon server.js",
+    "build-view":"cd view && npm run build",
+    "initialize-view":"cd veiw && npm install",
+    "heroku-postbuild":"npm run initialize-veiw && npm run build-view",
     "lint:check": "eslint ."
   },
   "author": "Chiyuan Fu",

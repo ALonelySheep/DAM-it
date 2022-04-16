@@ -17,8 +17,10 @@ const dashboardRouter = require('./router/dashboardRouter');
 const app = express();
 const port = process.env.PORT || 8000;
 
-// route middlewares
-// app.use('/api', expenseRoutes);
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('view/build'))
+}
+
 
 const bodyParser = require('body-parser')
 app.use(cors({

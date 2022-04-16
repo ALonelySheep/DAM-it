@@ -1,12 +1,23 @@
 const { Pool } = require('pg')
 
-const pool = new Pool({
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST,
-    database: process.env.DB_DATABASE,
-    password: process.env.DB_PASSWORD,
-    port: process.env.DB_PORT,
-});
+let connectInfo;
+if (process.env.NODE_ENV === 'production')
+    connectInfo = {
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        }
+    }
+else
+    connectInfo = {
+        user: process.env.DB_USER,
+        host: process.env.DB_HOST,
+        database: process.env.DB_DATABASE,
+        password: process.env.DB_PASSWORD,
+        port: process.env.DB_PORT,
+    }
+
+const pool = new Pool(connectInfo);
 
 // TODO 其实有个问题: 货币单位不同, 不能直接加, 但是现在(2022-4-15)先不考虑这个问题了
 
