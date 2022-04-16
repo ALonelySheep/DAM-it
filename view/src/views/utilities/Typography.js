@@ -107,13 +107,13 @@ const Typography = () => (
                                 variant="body2"
                                 color="primary"
                                 component={Link}
-                                href="https://berrydashboard.io"
+                                href="https://github.com/ALonelySheep"
                                 target="_blank"
                                 display="block"
                                 underline="hover"
                                 gutterBottom
                             >
-                                https://berrydashboard.io
+                               https://github.com/ALonelySheep
                             </MuiTypography>
                         </Grid>
                     </Grid>
