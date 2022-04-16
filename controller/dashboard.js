@@ -40,6 +40,7 @@ const sumPriceByMonth = (list) => {
 //?  GET获取 Total value
 //?////////////////////
 exports.queryTotalValue = async (req, res) => {
+    console.log('Enter queryTotalValue')
     const apptext = `SELECT price::numeric FROM app INNER JOIN installation
     ON app.id = installation.appid
     WHERE userid = $1
@@ -54,6 +55,7 @@ exports.queryTotalValue = async (req, res) => {
     ORDER BY price ASC`;
     const values = [res.locals.user.data.id]
     pool.connect(async (err, client, release) => {
+        console.log('pool Connected')
         if (err) {
             const errMsg = 'Error acquiring client'
             res.status(500).json(errMsg);
@@ -62,28 +64,30 @@ exports.queryTotalValue = async (req, res) => {
         try {
             let queryResult, totalValue = 0;
 
+            console.log("Start Query App")
             queryResult = await client.query(apptext, values);
             totalValue += sumPrice(queryResult.rows);
-            // console.log("---------------------APP---------------------")
+            console.log("----------------total-----APP---------------------")
             // console.log(queryResult.rows)
             // console.log("App Sum:")
             // console.log(sumPrice(queryResult.rows))
 
             queryResult = await client.query(subtext, values);
             totalValue += sumPrice(queryResult.rows);
-            // console.log("---------------------SUB---------------------")
+            console.log("----------------total-----SUB---------------------")
             // console.log(queryResult.rows)
             // console.log("Sub Sum:")
             // console.log(sumPrice(queryResult.rows))
 
             queryResult = await client.query(PCtext, values);
             totalValue += sumPrice(queryResult.rows);
-            // console.log("---------------------PC---------------------")
+            console.log("----------------total-----PC---------------------")
             // console.log(queryResult.rows)
             // console.log("PC Sum:")
             // console.log(sumPrice(queryResult.rows))
 
             res.status(200).json(totalValue);
+            console.log('||')
         } catch (err) {
             release()
             const errMsg = 'QueryTotalValues: Error executing query'
@@ -124,7 +128,7 @@ exports.queryMonthlyCost = async (req, res) => {
 
             queryResult = await client.query(apptext, values);
             response.app = sumPriceByMonth(queryResult.rows);
-            // console.log("---------------------APP---------------------")
+            console.log("---------------------APP------byMonth---------------")
             // console.log(queryResult.rows)
             // console.log("Sum by month:")
             // console.log(sumPriceByMonth(queryResult.rows))
@@ -133,16 +137,16 @@ exports.queryMonthlyCost = async (req, res) => {
 
             queryResult = await client.query(PCtext, values);
             response.paidContent = sumPriceByMonth(queryResult.rows);
-            console.log("---------------------PC---------------------")
-            console.log(queryResult.rows)
-            console.log("Sum by month:")
-            console.log(sumPriceByMonth(queryResult.rows))
-            console.log("response:")
-            console.log(response)
+            console.log("---------------------PC------byMonth---------------")
+            // console.log(queryResult.rows)
+            // console.log("Sum by month:")
+            // console.log(sumPriceByMonth(queryResult.rows))
+            // console.log("response:")
+            // console.log(response)
 
             queryResult = await client.query(subtext, values);
             response.subscription = sumPriceByMonth(queryResult.rows);
-            // console.log("---------------------SUB---------------------")
+            console.log("---------------------SUB------byMonth---------------")
             // console.log(queryResult.rows)
             // console.log("Sum by month:")
             // console.log(sumPriceByMonth(queryResult.rows))
@@ -150,6 +154,7 @@ exports.queryMonthlyCost = async (req, res) => {
             // console.log(response)
 
             res.status(200).json(response);
+            console.log('||')
         } catch (err) {
             release()
             const errMsg = 'QueryTotalValues: Error executing query'

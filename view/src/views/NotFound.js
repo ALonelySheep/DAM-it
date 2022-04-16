@@ -23,75 +23,75 @@ const NotFound = () =>
 (
 
     <AuthWrapper1>
-        <Grid container direction="column" justifyContent="flex-end" sx={{ minHeight: '100vh' }}>
-            <Grid item xs={12}>
-                <Grid container justifyContent="center" alignItems="center" sx={{ minHeight: 'calc(100vh - 68px)' }}>
-                    <Grid item sx={{ m: { xs: 1, sm: 3 }, mb: 0 }}>
+        {/* <Grid container direction="column" justifyContent="flex-end" sx={{ minHeight: '100vh' }}> */}
+        {/* <Grid item xs={12}> */}
+        <Grid container justifyContent="center" alignItems="center" sx={{ minHeight: 'calc(100vh - 300px)' }}>
+            <Grid item sx={{ m: { xs: 1, sm: 3 }, mb: 0 }}>
+                <Box
+                    component="main"
+                    sx={{
+                        alignItems: 'center',
+                        display: 'flex',
+                        flexGrow: 1,
+                        minHeight: '100%',
+                        backgroundColor: 'background.paper',
+                        padding: 8,
+                        boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
+                        borderRadius: '20px',
+                    }}
+                >
+
+                    <Container maxWidth="md">
                         <Box
-                            component="main"
                             sx={{
                                 alignItems: 'center',
                                 display: 'flex',
-                                flexGrow: 1,
-                                minHeight: '100%',
-                                backgroundColor: 'background.paper',
-                                padding: 8,
-                                boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
-                                borderRadius: '20px',
+                                flexDirection: 'column'
                             }}
                         >
-
-                            <Container maxWidth="md">
-                                <Box
-                                    sx={{
-                                        alignItems: 'center',
-                                        display: 'flex',
-                                        flexDirection: 'column'
+                            <Typography
+                                align="center"
+                                color="textPrimary"
+                                variant="h1"
+                            >
+                                404 Not Found
+                            </Typography>
+                            <Typography
+                                align="center"
+                                color="textPrimary"
+                                variant='h4'                                    >
+                                You either tried some shady route or you came here by mistake.
+                                Whichever it is, try using the navigation
+                            </Typography>
+                            <Box sx={{ textAlign: 'center' }}>
+                                <img
+                                    alt="Under development"
+                                    src={img}
+                                    style={{
+                                        marginTop: 50,
+                                        display: 'inline-block',
+                                        maxWidth: '100%',
+                                        width: 400
                                     }}
+                                />
+                            </Box>
+                            <Link
+                                to="/dashboard"
+                            >
+                                <Button
+                                    component="a"
+                                    startIcon={(<ArrowBackIcon fontSize="small" />)}
+                                    sx={{ mt: 3 }}
+                                    variant="contained"
                                 >
-                                    <Typography
-                                        align="center"
-                                        color="textPrimary"
-                                        variant="h1"
-                                    >
-                                        404: The page you are looking for isn’t here
-                                    </Typography>
-                                    <Typography
-                                        align="center"
-                                        color="textPrimary"
-                                        variant='h4'                                    >
-                                        You either tried some shady route or you came here by mistake.
-                                        Whichever it is, try using the navigation
-                                    </Typography>
-                                    <Box sx={{ textAlign: 'center' }}>
-                                        <img
-                                            alt="Under development"
-                                            src={img}
-                                            style={{
-                                                marginTop: 50,
-                                                display: 'inline-block',
-                                                maxWidth: '100%',
-                                                width: 560
-                                            }}
-                                        />
-                                    </Box>
-                                    <Link
-                                        to="/dashboard"
-                                    >
-                                        <Button
-                                            component="a"
-                                            startIcon={(<ArrowBackIcon fontSize="small" />)}
-                                            sx={{ mt: 3 }}
-                                            variant="contained"
-                                        >
-                                            Go back to dashboard
-                                        </Button>
-                                    </Link>
-                                </Box>
-                            </Container>
+                                    Go back to dashboard
+                                </Button>
+                            </Link>
                         </Box>
-                    </Grid>
-                </Grid>
+                    </Container>
+                </Box>
+                {/* </Grid> */}
+                {/* </Grid> */}
             </Grid>
         </Grid>
     </AuthWrapper1>

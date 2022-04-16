@@ -29,7 +29,7 @@ const LoginSample = Loadable(lazy(() => import('views/pages/authentication/authe
 const RegisterSample = Loadable(lazy(() => import('views/pages/authentication/authentication3/Register3')));
 // const SimpleForm = Loadable(lazy(() => import('views/utilities/SubscriptionForm')));
 
-// const NotFound = Loadable(lazy(() => import('views/NotFound')));
+const NotFound = Loadable(lazy(() => import('views/NotFound')));
 
 
 // ==============================|| MAIN ROUTING ||============================== //
@@ -58,37 +58,46 @@ const MainRoutesComponents =
             element: <PersonalWorks />
         },
         {
-            path: '/utils/util-typography',
-            element: <UtilsTypography />
+            path: '/',
+            element: <DashboardDefault />
         },
         {
-            path: '/utils/util-color',
-            element: <UtilsColor />
+            path: '*',
+            // element: <DashboardDefault />
+            element: <NotFound />
         },
-        {
-            path: '/utils/util-shadow',
-            element: <UtilsShadow />
-        },
-        {
-            path: '/icons/tabler-icons',
-            element: <UtilsTablerIcons />
-        },
-        {
-            path: '/icons/material-icons',
-            element: <UtilsMaterialIcons />
-        },
-        {
-            path: '/sample-page',
-            element: <SamplePage />
-        },
-        {
-            path: '/login-sample',
-            element: <LoginSample />
-        },
-        {
-            path: '/register-sample',
-            element: <RegisterSample />
-        },
+        // {
+        //     path: '/utils/util-typography',
+        //     element: <UtilsTypography />
+        // },
+        // {
+        //     path: '/utils/util-color',
+        //     element: <UtilsColor />
+        // },
+        // {
+        //     path: '/utils/util-shadow',
+        //     element: <UtilsShadow />
+        // },
+        // {
+        //     path: '/icons/tabler-icons',
+        //     element: <UtilsTablerIcons />
+        // },
+        // {
+        //     path: '/icons/material-icons',
+        //     element: <UtilsMaterialIcons />
+        // },
+        // {
+        //     path: '/sample-page',
+        //     element: <SamplePage />
+        // },
+        // {
+        //     path: '/login-sample',
+        //     element: <LoginSample />
+        // },
+        // {
+        //     path: '/register-sample',
+        //     element: <RegisterSample />
+        // },
 
     ]
 }

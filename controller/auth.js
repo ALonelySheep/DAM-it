@@ -12,9 +12,9 @@ exports.authorizeRequest = (req, res, next) => {
             res.status(401).json('User token expired')
         } else {
             // 合法也没过期，正常放行
-            // console.log("Authorized");
-            console.log("UserID");
-            console.log(decoded.data.id);
+            // // console.log("Authorized");
+            // console.log("UserID");
+            // console.log(decoded.data.id);
             res.locals.user = decoded;
             next();
         }

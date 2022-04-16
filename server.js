@@ -4,7 +4,7 @@ const cors = require('cors');
 require('dotenv').config();
 // const expenseRoutes = require('./routes/expense');
 
-const testRouter = require('./router/testRouter');
+// const testRouter = require('./router/testRouter');
 const subscriptionRouter = require('./router/subscriptionRouter');
 const appRouter = require('./router/appRouter');
 const paidContentRouter = require('./router/paidContentRouter');
@@ -33,7 +33,7 @@ app.use(
   })
 )
 
-app.use('/test', testRouter);
+// app.use('/test', testRouter);
 app.use('/user', userRouter);
 app.use('/app', appRouter);
 app.use('/subscription', subscriptionRouter);
