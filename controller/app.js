@@ -113,25 +113,13 @@ exports.deleteApp = async (req, res) => {
 //?////////////////////
 //?  GET获取App
 //?////////////////////
-const formatAppinfo = async (apps) =>
-    apps.map(app => {
-        const price = app.price.slice(1, app.price.length);
-        return {
-            id: app.id,
-            appId: app.appid,
-            name: app.name,
-            price,
-            monetaryUnit: app.monetaryunit,
-            date: app.date
-        };
-    })
 
 exports.queryAllApps = async (req, res) => {
     const text = `SELECT
         installation.id AS id,
         app.id AS appid,
         name,
-        price,
+        price::numeric,
         monetaryunit,
         date
     FROM app INNER JOIN installation
@@ -152,11 +140,9 @@ exports.queryAllApps = async (req, res) => {
                 res.status(500).json(errMsg);
                 return console.error(errMsg, err.stack)
             }
-            // console.log(result.rows)
             // console.log("---------------------APP---------------------")
-            const processedData = await formatAppinfo(result.rows);
-            // console.log(processedData)
-            res.status(200).json(processedData);
+            // console.log(result.rows)
+            res.status(200).json(result.rows);
         })
     })
 }

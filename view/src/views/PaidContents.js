@@ -47,8 +47,8 @@ const preprocessData = (apps, PC) => {
     // console.log(subs);
     const PCGrouped = groupBy(PC, 'appid');
     for (let i = 0; i < apps.length; i += 1) {
-        if (!PCGrouped[apps[i].appId])
-            PCGrouped[apps[i].appId] = [];
+        if (!PCGrouped[apps[i].appid])
+            PCGrouped[apps[i].appid] = [];
     }
     return PCGrouped;
 }
@@ -143,9 +143,9 @@ const PaidContents = () => {
         const [open, setOpen] = useState(false);
         const darkColorText = false;
         // Props
-        const { name, price, monetaryUnit } = paidContent;
+        const { name, price, monetaryunit } = paidContent;
         // Preprocessing: price
-        const priceString = (Number(price) === 0) ? 'Free' : `${price} ${monetaryUnit}`;
+        const priceString = (Number(price) === 0) ? 'Free' : `${price} ${monetaryunit}`;
 
         // Auxilary functions
         const handleClickOpen = () => {
@@ -253,7 +253,7 @@ const PaidContents = () => {
                             setDialogClosed={setDialogClosed}
                             isDialogClosed={isDialogClosed}
                             isEdit={false}
-                            appid={app.appId} />
+                            appid={app.appid} />
                     </DialogContent>
                 </Dialog>
 
@@ -439,7 +439,7 @@ const PaidContents = () => {
         >
             <Grid container spacing={gridSpacing}>
                 {
-                    apps.map((app) => (makeGridForApp(app, paidContents[app.appId])))
+                    apps.map((app) => (makeGridForApp(app, paidContents[app.appid])))
                 }
                 <Grid key='NewApp' item xs={12}>
                     <NewApp />

@@ -47,8 +47,8 @@ const preprocessData = (apps, subs) => {
     // console.log(subs);
     const subsGrouped = groupBy(subs, 'appid');
     for (let i = 0; i < apps.length; i += 1) {
-        if (!subsGrouped[apps[i].appId])
-            subsGrouped[apps[i].appId] = [];
+        if (!subsGrouped[apps[i].appid])
+            subsGrouped[apps[i].appid] = [];
     }
     return subsGrouped;
 }
@@ -262,7 +262,7 @@ const Subscriptions = () => {
                             setDialogClosed={setDialogClosed}
                             isDialogClosed={isDialogClosed}
                             isEdit={false}
-                            appid={app.appId} />
+                            appid={app.appid} />
                     </DialogContent>
                 </Dialog>
 
@@ -448,7 +448,7 @@ const Subscriptions = () => {
         >
             <Grid container spacing={gridSpacing}>
                 {
-                    apps.map((app) => (makeGridForApp(app, subscriptions[app.appId])))
+                    apps.map((app) => (makeGridForApp(app, subscriptions[app.appid])))
                 }
                 <Grid key='NewApp' item xs={12}>
                     <NewApp />

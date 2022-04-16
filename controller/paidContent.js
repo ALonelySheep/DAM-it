@@ -130,17 +130,6 @@ exports.deletePaidContent = async (req, res) => {
 //?////////////////////
 //?  GET获取PaidContent
 //?////////////////////
-const formatPCInfoForFrontend = async (PC) =>
-    PC.map(sub => {
-        const price = sub.price.slice(1, sub.price.length);
-        return {
-            id: sub.id,
-            appid: sub.appid,
-            name: sub.name,
-            price,
-            monetaryUnit: sub.monetaryunit
-        };
-    })
 
 exports.queryAllPaidContents = async (req, res) => {
     // console.log("connecting")
@@ -148,7 +137,7 @@ exports.queryAllPaidContents = async (req, res) => {
         purchase.id AS id,
         appid,
         name,
-        price,
+        price::numeric,
         monetaryunit
     FROM paidcontent INNER JOIN purchase
     ON paidcontent.id = purchase.paidcontentid
@@ -170,12 +159,9 @@ exports.queryAllPaidContents = async (req, res) => {
                 res.status(500).json(errMsg);
                 return console.error(errMsg, err.stack)
             }
-            // console.log(result.rows)
             // console.log("----------------SUBSCRIPTIONS---------------------")
-            const processedData = await formatPCInfoForFrontend(result.rows);
-            // console.log("processedData")
-            // console.log(processedData)
-            res.status(200).json(processedData);
+            // console.log(result.rows)
+            res.status(200).json(result.rows);
         })
     })
 }

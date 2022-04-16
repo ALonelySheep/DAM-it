@@ -54,6 +54,12 @@ const SubscriptionForm = ({ title, setOpen, setLoading, isDialogClosed, setDialo
         subscriptionData.billingCycleUnit = raw.charAt(0).toUpperCase() + raw.slice(1);
         // ? Capitalize first letter & remove 's'
         // subscription.billingCycleUnit = raw.charAt(0).toUpperCase() + raw.slice(1, raw.slice(raw.length - 1, raw.length) === 's' ? raw.length - 1 : raw.length);
+        // console.log("Form Opens")
+        // console.log(subscription)
+        // console.log("Form Opens")
+        // console.log(new Date(subscription.startDate))
+        // console.log("Form Opens")
+        // console.log(subscriptionData)
     }
     // console.log('isEdit', isEdit)
 
@@ -87,12 +93,20 @@ const SubscriptionForm = ({ title, setOpen, setLoading, isDialogClosed, setDialo
                     monetaryUnit: Yup.string().required('Monetary unit is required'),
                 })}
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-                    // e.preventDefault();
                     try {
-                        console.log("Form values");
-                        console.log(values);
+                        // console.log("Form values");
+                        // console.log(values);
+                        // console.log("Form values Date");
+                        // console.log(new Date(values.startDate));
+                        // console.log(new Date(values.startDate).toISOString());
+                        // values.startDate = new Date(values.startDate);
+                        // console.log("Form NEW values");
+                        // console.log(values);
+                        // console.log(new Date(values.startDate).toISOString().split('T')[0]);
                         let response;
+                        // console.log("isEdit", isEdit);
                         if (isEdit) {
+                            // console.log("Updating subscription");
                             response = await updateSubscription(auth.userInfo.token, values);
                         } else {
                             values.appid = appid

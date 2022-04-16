@@ -13,8 +13,8 @@ const pool = new Pool({
 //?////////////////////
 exports.addSubscription = async (req, res) => {
     const { body } = req;
-    // console.log("body")
-    // console.log(body)
+    console.log("body")
+    console.log(body)
     //name,appId,price,monetaryUnit,cycle
     const text = `INSERT INTO renewal
     (userId,subscriptionId,startDate,autoRenewal)
@@ -64,6 +64,8 @@ exports.addSubscription = async (req, res) => {
 // * getSubId may cause orphan subscription, we delete them in delete subscription
 exports.updateSubscription = async (req, res) => {
     const { body } = req;
+    console.log("body")
+    console.log(body)
     const text = `
     UPDATE renewal
     SET subscriptionId = sub.SubId,
@@ -166,7 +168,7 @@ const formatSubsInfoForFrontend = async (subs) =>
             subscriptionid: sub.subscriptionid,
             appid: sub.appid,
             name: sub.name,
-            price: sub.price.slice(1, sub.price.length),
+            price: sub.price,
             monetaryUnit: sub.monetaryunit,
             startDate: new Date(sub.startdate),
             billingCycle,
@@ -177,6 +179,8 @@ const formatSubsInfoForFrontend = async (subs) =>
     })
 
 
+// ? 为什么存进去的日期读出来就少了一天??????
+// ? 真的百思不得其解
 
 exports.queryAllSubscriptions = async (req, res) => {
     const text = `SELECT
@@ -184,9 +188,9 @@ exports.queryAllSubscriptions = async (req, res) => {
         subscriptionid,
         appid,
         name,
-        price,
+        price::numeric,
         monetaryunit,
-        startdate,
+        startdate::date + '1 day'::interval AS startdate,
         cycle,
         autorenewal
     FROM subscription INNER JOIN renewal

@@ -11,7 +11,7 @@ const paidContentRouter = require('./router/paidContentRouter');
 const personalWorkRouter = require('./router/personalWorkRouter');
 const deviceRouter = require('./router/deviceRouter');
 const userRouter = require('./router/userRouter');
-
+const dashboardRouter = require('./router/dashboardRouter');
 
 // Running express server
 const app = express();
@@ -38,6 +38,7 @@ app.use('/subscription', subscriptionRouter);
 app.use('/paid-content', paidContentRouter);
 app.use('/device', deviceRouter);
 app.use('/personal-work', personalWorkRouter);
+app.use('/dashboard', dashboardRouter);
 
 
 app.listen(port, () => {

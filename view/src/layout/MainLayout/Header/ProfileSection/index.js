@@ -35,7 +35,9 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import MainCard from 'ui-component/cards/MainCard';
 import Transitions from 'ui-component/extended/Transitions';
 // import UpgradePlanCard from './UpgradePlanCard';
-import User1 from 'assets/images/users/user-round.svg';
+// import User1 from 'assets/images/users/user-round.svg';
+// import User1 from 'assets/images/users/红小豆.jpg';
+import User1 from 'assets/images/users/user.png';
 
 // assets
 import {

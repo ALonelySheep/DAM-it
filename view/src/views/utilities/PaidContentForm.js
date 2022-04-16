@@ -40,6 +40,7 @@ const PaidContentForm = ({ title, setOpen, setLoading, isDialogClosed, setDialog
 
     if (isEdit) {
         paidContent.submit = null;
+        paidContent.monetaryUnit = paidContent.monetaryunit;
     }
 
     const initialValues = isEdit ? paidContent :

@@ -42,8 +42,14 @@ export const updateSubscription = async (userToken, subscription) => {
     delete subscription.submit;
     delete subscription.billingCycle;
     delete subscription.billingCycleUnit;
+    // subscription.startDate = subscription.startDate;
     // console.log("PUT subscription Data:");
     // console.log(subscription);
+    subscription.startDate = new Date(subscription.startDate).toISOString();
+    // console.log("PUT subscription Data: NEW");
+    // console.log(subscription);
+    // console.log("PUT subscription.startDate Data:");
+    // console.log(new Date(subscription.startDate).toISOString().split('T')[0]);
     const response = await fetch(`${API_ENDPOINT}/subscription/${subscription.id}`, {
         method: "PUT",
         body: JSON.stringify(subscription),
@@ -52,7 +58,8 @@ export const updateSubscription = async (userToken, subscription) => {
             "authorization": userToken,
         },
     });
-
+    console.log("PUT subscription Response:");
+    console.log(await response.json());
     return response.status;
 };
 

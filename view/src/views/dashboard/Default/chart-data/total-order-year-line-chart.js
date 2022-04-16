@@ -5,6 +5,7 @@ const chartData = {
     height: 90,
     options: {
         chart: {
+            id: 'line-chart',
             sparkline: {
                 enabled: true
             }
@@ -22,8 +23,7 @@ const chartData = {
             width: 3
         },
         yaxis: {
-            min: 0,
-            max: 100
+            min: 0
         },
         tooltip: {
             theme: 'dark',

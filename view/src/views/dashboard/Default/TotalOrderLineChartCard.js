@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 // material-ui
 import { useTheme, styled } from '@mui/material/styles';
@@ -7,12 +7,13 @@ import { Avatar, Box, Button, Grid, Typography } from '@mui/material';
 
 // third-party
 import Chart from 'react-apexcharts';
+import ApexCharts from 'apexcharts';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import SkeletonTotalOrderCard from 'ui-component/cards/Skeleton/EarningCard';
 
-import ChartDataMonth from './chart-data/total-order-month-line-chart';
+// import ChartDataMonth from './chart-data/total-order-month-line-chart';
 import ChartDataYear from './chart-data/total-order-year-line-chart';
 
 // assets
@@ -63,13 +64,74 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 // ==============================|| DASHBOARD - TOTAL ORDER LINE CHART CARD ||============================== //
 
-const TotalOrderLineChartCard = ({ isLoading }) => {
+const TotalOrderLineChartCard = ({ isLoading, monthlyData }) => {
     const theme = useTheme();
 
     const [timeValue, setTimeValue] = useState(false);
     const handleChangeTime = (event, newValue) => {
         setTimeValue(newValue);
     };
+
+    useEffect(() => {
+        const newChartData = {
+            type: 'line',
+            height: 90,
+            options: {
+                chart: {
+                    id: 'line-chart',
+                    sparkline: {
+                        enabled: true
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                colors: ['#fff'],
+                fill: {
+                    type: 'solid',
+                    opacity: 1
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: 3
+                },
+                xaxis: {
+                    type: 'category',
+                    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                },
+                yaxis: {
+                    min: 0,
+                    // max: Math.max(...monthlyData)
+                },
+                tooltip: {
+                    theme: 'dark',
+                    fixed: {
+                        enabled: false
+                    },
+                    x: {
+                        show: false
+                    },
+                    y: {
+                        title: 'Cost'
+                    },
+                    marker: {
+                        show: false
+                    }
+                }
+            },
+            series: [
+                {
+                    name: 'Cost',
+                    data: monthlyData
+                }
+            ]
+        };
+        // do not load chart when loading
+        if (!isLoading) {
+            // newChartData.options.yaxis.max = Math.max(...monthlyData);
+            ApexCharts.exec(`line-chart`, 'updateOptions', newChartData);
+        }
+    }, [isLoading]);
 
     return (
         <>
@@ -96,7 +158,7 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
                                         </Avatar>
                                     </Grid>
                                     <Grid item>
-                                        <Button
+                                        {/* <Button
                                             disableElevation
                                             variant={timeValue ? 'contained' : 'text'}
                                             size="small"
@@ -104,16 +166,16 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
                                             onClick={(e) => handleChangeTime(e, true)}
                                         >
                                             Month
-                                        </Button>
-                                        <Button
+                                        </Button> */}
+                                        {/* <Button
                                             disableElevation
                                             variant={!timeValue ? 'contained' : 'text'}
                                             size="small"
                                             sx={{ color: 'inherit' }}
                                             onClick={(e) => handleChangeTime(e, false)}
                                         >
-                                            Year
-                                        </Button>
+                                            {new Date().getFullYear()}
+                                        </Button> */}
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -122,15 +184,15 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
                                     <Grid item xs={6}>
                                         <Grid container alignItems="center">
                                             <Grid item>
-                                                {timeValue ? (
+                                                {/* {timeValue ? (
                                                     <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
                                                         $108
                                                     </Typography>
-                                                ) : (
-                                                    <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
-                                                        $961
-                                                    </Typography>
-                                                )}
+                                                ) : ( */}
+                                                <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
+                                                    ${Math.round(monthlyData.reduce((a, b) => a + b, 0)*100)/100}
+                                                </Typography>
+                                                {/* )} */}
                                             </Grid>
                                             <Grid item>
                                                 <Avatar
@@ -152,13 +214,13 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
                                                         color: theme.palette.primary[200]
                                                     }}
                                                 >
-                                                    Total Order
+                                                    Total Cost
                                                 </Typography>
                                             </Grid>
                                         </Grid>
                                     </Grid>
                                     <Grid item xs={6}>
-                                        {timeValue ? <Chart {...ChartDataMonth} /> : <Chart {...ChartDataYear} />}
+                                        <Chart {...ChartDataYear} />
                                     </Grid>
                                 </Grid>
                             </Grid>

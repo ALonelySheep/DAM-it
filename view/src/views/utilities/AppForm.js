@@ -87,8 +87,9 @@ const AppForm = ({ title, setOpen, setLoading, isDialogClosed, setDialogClosed, 
                                 if (values.appid !== response.appid) {
                                     console.log(`appid changed from ${values.appId} to ${response.appid}`);
                                     // 更新subscription
-
+                                    // TODO
                                     // 更新paidContent
+                                    // TODO
                                 }
                             }
                         } else {
