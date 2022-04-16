@@ -61,11 +61,11 @@ const MainRoutesComponents =
             path: '/',
             element: <DashboardDefault />
         },
-        {
-            path: '*',
+        // {
+            // path: '*',
             // element: <DashboardDefault />
-            element: <NotFound />
-        },
+            // element: <NotFound />
+        // },
         // {
         //     path: '/utils/util-typography',
         //     element: <UtilsTypography />
