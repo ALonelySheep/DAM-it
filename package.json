@@ -14,7 +14,7 @@
     "startdev": "nodemon server.js",
     "build-view":"cd view && npm run build",
     "initialize-view":"cd view && npm install",
-    "heroku-postbuild":"npm run initialize-veiw && npm run build-view",
+    "heroku-postbuild":"npm run initialize-view && npm run build-view",
     "lint:check": "eslint ."
   },
   "author": "Chiyuan Fu",
