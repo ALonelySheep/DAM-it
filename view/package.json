@@ -2,7 +2,7 @@
     "name": "dam-it-view",
     "version": "1.0.0",
     "private": true,
-    "homepage": "/login",
+    "homepage": "/",
     "dependencies": {
         "@authing/react-ui-components": "^3.0.31",
         "@date-io/date-fns": "^2.13.1",
