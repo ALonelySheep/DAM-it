@@ -1,6 +1,9 @@
 {
   "name": "dam-it",
   "version": "1.0.0",
+  "engines": {
+    "node": "14.x"
+  },
   "description": "A simple personal Digital Asset Management(DAM) tool.",
   "main": "server.js",
   "nodemonConfig": {
